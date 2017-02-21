@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Cinema</string>
+    <string name="splash_message">Set preferences to find special picked movies for you</string>
+    <string name="genre_label">genre</string>
+    <string name="years_label">years</string>
+    <string name="rating_label">rating</string>
+    <string name="search_button">search</string>
+    <string name="recomended">Recomended</string>
+    <string name="director_label">Director: </string>
+    <string name="writer_label">Writer: </string>
+    <string name="actors_label">Actors: </string>
+    <string name="awards_label">Awards: </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

@@ -1,0 +1,83 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.wins.cinema.InfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        >
+
+        <TextView
+            android:id="@+id/director_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/director_label"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/director_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="aaaaaaaaaa"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/writer_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:text="@string/writer_label"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/writer_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="aaaaaaaaaa"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+        <TextView
+        android:id="@+id/actors_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:text="@string/actors_label"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/actors_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="aaaaaaaaaa"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/awards_label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:text="@string/awards_label"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/awards_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="aaaaaaaaaa"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>
