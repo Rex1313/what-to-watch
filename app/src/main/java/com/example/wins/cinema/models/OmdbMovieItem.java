@@ -1,5 +1,8 @@
 package com.example.wins.cinema.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wins on 10/16/2016.
  */
@@ -12,6 +15,8 @@ public class OmdbMovieItem {
     private String tomatoRating;
     private String imdbRating;
     private String tomatoMeter;
+    private List<Ratings> Ratings = new ArrayList<>();
+
 
     public String getRuntime() {
         return Runtime;
@@ -75,5 +80,13 @@ public class OmdbMovieItem {
 
     public void setTomatoMeter(String tomatoMeter) {
         this.tomatoMeter = tomatoMeter;
+    }
+
+    public List<Ratings> getRatings() {
+        return Ratings;
+    }
+
+    public void setRatings(List<Ratings> ratings) {
+        this.Ratings = ratings;
     }
 }

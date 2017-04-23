@@ -155,7 +155,22 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/gray"
                 android:theme="@style/ThemeToolbarDarkOverflow"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                >  <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/watched_checkbox"
+                    android:gravity="center"
+                    android:text="Watched"
+                    android:foregroundGravity="center"
+                    />
+            </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
 
 
         </android.support.design.widget.CollapsingToolbarLayout>

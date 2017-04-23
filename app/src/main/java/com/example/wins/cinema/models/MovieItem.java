@@ -15,6 +15,7 @@ public class MovieItem implements Serializable{
     private Integer[] genre_ids;
     private String popularity;
     private String overview;
+    public boolean isWatched = false;
 
     public String getTitle() {
         return title;

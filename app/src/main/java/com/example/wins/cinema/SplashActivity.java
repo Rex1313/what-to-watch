@@ -1,7 +1,10 @@
 package com.example.wins.cinema;
 
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +25,7 @@ public class SplashActivity extends BaseActivity {
     private GlobalApplication app;
     private RecyclerView categoryRecyclerView;
     private ProgressBar progressBar;
+    private CategoryRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +68,26 @@ public class SplashActivity extends BaseActivity {
             }
         });
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            RecyclerView.LayoutManager manager = new GridLayoutManager(this, 4);
+            categoryRecyclerView.setLayoutManager(manager);
+            adapter.notifyDataSetChanged();
+        }else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
+            categoryRecyclerView.setLayoutManager(manager);
+            adapter.notifyDataSetChanged();
+        }
 
+
+    }
     private void loadCategoryAdapter(List<GenresItem> genres) {
-        CategoryRecyclerAdapter adapter = new CategoryRecyclerAdapter(this, genres);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
-        categoryRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        adapter = new CategoryRecyclerAdapter(this, genres);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        categoryRecyclerView.setLayoutManager(gridLayoutManager);
         categoryRecyclerView.setAdapter(adapter);
     }
 }

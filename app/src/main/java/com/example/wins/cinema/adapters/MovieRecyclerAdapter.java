@@ -25,6 +25,8 @@ import com.example.wins.cinema.interfaces.ApiCallbacks;
 import com.example.wins.cinema.interfaces.MovieRecyclerInteractions;
 import com.example.wins.cinema.models.MainItem;
 import com.example.wins.cinema.models.MovieItem;
+import com.example.wins.cinema.utils.PreferencesUtils;
+import com.example.wins.cinema.utils.StaticHelper;
 import com.example.wins.cinema.utils.StaticValues;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -64,6 +66,11 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         if (!mList.get(position).getRelease_date().equals("")) {
             holder.year.setText(mList.get(position).getRelease_date().substring(0, 4));
         }
+        if(mList.get(position).isWatched){
+            holder.watched.setVisibility(View.VISIBLE);
+        }else{
+            holder.watched.setVisibility(View.GONE);
+        }
         holder.time.setText(mList.get(position).getVote_average());
         Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + mList.get(position).getPoster_path()).fit().centerCrop().into(holder.cover);
 
@@ -78,11 +85,28 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
                 context.startActivity(intent, options.toBundle());
             }
         });
+        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(mList.get(position).isWatched){
+                    StaticHelper.removeWatched(context, mList.get(position).getId());
+                    mList.get(position).isWatched=false;
+                }else{
+                    StaticHelper.addWatched(context, mList.get(position).getId());
+                    mList.get(position).isWatched=true;
+                }
+                notifyItemChanged(position);
+                return true;
+            }
+        });
         if (position == mList.size() - 1) {
             callback.loadNextPage();
         }
 
 
+    }
+    public List<MovieItem> getList(){
+        return this.mList;
     }
     @Override
     public void onViewDetachedFromWindow(MovieHolder holder)
@@ -101,6 +125,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             lastPosition = position;
         }
     }
+
     public void refreshAdapter(List<MovieItem> list) {
         this.mList = list;
         notifyDataSetChanged();
@@ -110,8 +135,10 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         notifyDataSetChanged();
     }
 
+
+
     public class MovieHolder extends RecyclerView.ViewHolder {
-        TextView title, year, time;
+        TextView title, year, time ,watched;
         ImageView cover, backdrop;
         CardView mainLayout;
 
@@ -122,6 +149,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             time = (TextView) itemView.findViewById(R.id.vote_average);
             cover = (ImageView) itemView.findViewById(R.id.movie_cover);
             backdrop = (ImageView) itemView.findViewById(R.id.backdrop);
+            watched = (TextView) itemView.findViewById(R.id.watched_textview);
             mainLayout = (CardView) itemView;
 
         }

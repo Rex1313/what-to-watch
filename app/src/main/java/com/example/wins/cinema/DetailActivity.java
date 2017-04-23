@@ -3,6 +3,7 @@ package com.example.wins.cinema;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.media.Image;
+import android.media.Rating;
 import android.net.Uri;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,11 +25,17 @@ import com.example.wins.cinema.core.BlurTransform;
 import com.example.wins.cinema.interfaces.ApiCallbacks;
 import com.example.wins.cinema.models.MovieItem;
 import com.example.wins.cinema.models.OmdbMovieItem;
+import com.example.wins.cinema.models.Ratings;
+import com.example.wins.cinema.models.Watched;
+import com.example.wins.cinema.utils.PreferencesUtils;
+import com.example.wins.cinema.utils.StaticHelper;
 import com.example.wins.cinema.utils.StaticValues;
 import com.google.gson.Gson;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class DetailActivity extends BaseActivity implements InfoFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, MediaFragment.OnFragmentInteractionListener {
     ImageView backdrop, cover;
@@ -40,6 +49,7 @@ public class DetailActivity extends BaseActivity implements InfoFragment.OnFragm
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private ApiTask additionalInfoTask;
+    private CheckBox watchedCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +102,18 @@ public class DetailActivity extends BaseActivity implements InfoFragment.OnFragm
                     @Override
                     public void run() {
                         duration.setText(item.getRuntime());
-                        tomatoesRating.setText(item.getTomatoMeter() + "%");
+                        // There was a change in API, tomatoes rating is available now in Ratings where source = "Rotten Tomatoes"
+                        for(Ratings rating: item.getRatings()){
+                            if(rating.getSource().equals("Rotten Tomatoes")){
+                                tomatoesRating.setText(rating.getValue());
+                            }
+                        }
+
                         imdbRating.setText(item.getImdbRating());
                         mainRating.setText(movieItem.getVote_average());
 
+                        InfoFragment infoFragment = (InfoFragment) pagerAdapter.getFragments().get(1);
+                        infoFragment.populateInfo(item);
 
                     }
                 });
@@ -119,6 +137,18 @@ public class DetailActivity extends BaseActivity implements InfoFragment.OnFragm
         tomatoesRating = (TextView) findViewById(R.id.tomatoes_rating);
         mainRating = (TextView) findViewById(R.id.main_rating);
         imdbRating = (TextView) findViewById(R.id.imdb_rating);
+        watchedCheckbox = (CheckBox) findViewById(R.id.watched_checkbox);
+        watchedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                StaticHelper.addWatched(DetailActivity.this,movieItem.getId());
+                }else{
+                    StaticHelper.removeWatched(DetailActivity.this, movieItem.getId());
+                }
+            }
+        });
+        watchedCheckbox.setChecked(movieItem.isWatched);
         toolbar.setTitle(movieItem.getTitle());
         // Initialization of ViewPager
         ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
@@ -129,6 +159,8 @@ public class DetailActivity extends BaseActivity implements InfoFragment.OnFragm
         mTabLayout.setupWithViewPager(pager);
 
     }
+
+
 
     private void populateLayout() {
         Picasso.with(this).load(StaticValues.POSTER_1000_BASE_URL + movieItem.getBackdrop_path()).fit().centerCrop().into(backdrop);

@@ -12,7 +12,7 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="12dp"
         android:layout_marginStart="20dp"
         android:text="What's on your mind ?"
         android:layout_below="@id/toolbar"
@@ -31,12 +31,12 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_recycler_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/subheader_text"
         android:layout_margin="12dp"
         android:layout_centerInParent="true"
-        android:scrollbars="horizontal"
+        android:scrollbars="vertical"
         android:fadeScrollbars="false"
         ></android.support.v7.widget.RecyclerView>
 

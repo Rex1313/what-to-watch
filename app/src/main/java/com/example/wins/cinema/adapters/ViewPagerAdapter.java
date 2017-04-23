@@ -17,7 +17,7 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private String[] tabs = {"Story", "Info", "Media"};
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments;
 
     public List<Fragment> getFragments() {
         return fragments;
@@ -25,6 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        setUpFragments();
     }
 
     @Override
@@ -32,25 +33,26 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                StoryFragment storyFragment = new StoryFragment();
-
-
-                return storyFragment;
-
+                return getFragments().get(0);
             case 1:
-                InfoFragment infoFragment = new InfoFragment();
-
-
-                return infoFragment;
+                return getFragments().get(1);
             case 2:
-                MediaFragment mediaFragment = new MediaFragment();
-
-
-                return mediaFragment;
-
+                return getFragments().get(2);
         }
 
         return new InfoFragment();
+    }
+
+
+    private void setUpFragments(){
+        fragments = new ArrayList<>();
+        StoryFragment storyFragment = new StoryFragment();
+        fragments.add(0, storyFragment);
+        InfoFragment infoFragment = new InfoFragment();
+        fragments.add(1, infoFragment);
+        MediaFragment mediaFragment = new MediaFragment();
+        fragments.add(2,mediaFragment);
+
     }
 
     @Override
