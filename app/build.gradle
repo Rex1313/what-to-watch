@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.example.wins.cinema"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -22,13 +22,13 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.google.code.gson:gson:1.7.2'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.google.apis:google-api-services-youtube:v3-rev178-1.22.0'
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
+    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev178-1.22.0'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }
