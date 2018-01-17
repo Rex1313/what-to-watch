@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_list"
-    tools:context="com.example.wins.cinema.SplashActivity">
+    tools:mContext="com.example.wins.cinema.co.example.wins.cinema.SplashActivity">
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
     <TextView
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginStart="20dp"
-        android:text="What's on your mind ?"
+        android:text="@string/main_screen_header"
         android:layout_below="@id/toolbar"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_below="@id/header_text"
-        android:text="Watch Something"
+        android:text="@string/main_screen_subheader"
+        android:layout_centerInParent="true"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
@@ -38,7 +39,7 @@
         android:layout_centerInParent="true"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
-        ></android.support.v7.widget.RecyclerView>
+        />
 
     <ProgressBar
         android:id="@+id/progress_bar"

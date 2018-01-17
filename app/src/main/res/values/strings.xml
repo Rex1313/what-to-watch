@@ -5,12 +5,22 @@
     <string name="years_label">years</string>
     <string name="rating_label">rating</string>
     <string name="search_button">search</string>
-    <string name="recomended">Recomended</string>
+    <string name="recomended">Recommended</string>
     <string name="director_label">Director: </string>
     <string name="writer_label">Writer: </string>
     <string name="actors_label">Actors: </string>
     <string name="awards_label">Awards: </string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_screen_title">What to watch?</string>
+    <string name="main_screen_header">What\'s on your mind ?</string>
+    <string name="main_screen_subheader">Watch Something</string>
+    <string name="watched">WATCHED</string>
+    // arrays
+    <string-array name="fragment_titles">
+        <item>Story</item>
+        <item>Info</item>
+        <item>Media</item>
+    </string-array>
+
 
 </resources>

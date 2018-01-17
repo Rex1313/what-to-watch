@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.wins.cinema.InfoFragment">
+    tools:mContext="com.example.wins.cinema.co.example.wins.cinema.InfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -25,7 +25,6 @@
             android:id="@+id/director_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="aaaaaaaaaa"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
         <TextView
@@ -42,7 +41,6 @@
             android:id="@+id/writer_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="aaaaaaaaaa"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
         <TextView
@@ -59,7 +57,6 @@
             android:id="@+id/actors_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="aaaaaaaaaa"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
         <TextView
@@ -76,7 +73,6 @@
             android:id="@+id/awards_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="aaaaaaaaaa"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
     </LinearLayout>
