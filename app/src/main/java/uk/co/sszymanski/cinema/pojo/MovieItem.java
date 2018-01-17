@@ -1,5 +1,7 @@
 package uk.co.sszymanski.cinema.pojo;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,11 +10,16 @@ import java.io.Serializable;
 public class MovieItem implements Serializable{
     private int id;
     private String title;
-    private String release_date;
-    private String vote_average;
-    private String poster_path;
-    private String backdrop_path;
-    private Integer[] genre_ids;
+    @SerializedName("releaseDate")
+    private String releaseDate;
+    @SerializedName("voteAverage")
+    private String voteAverage;
+    @SerializedName("posterPath")
+    private String posterPath;
+    @SerializedName("backdropPath")
+    private String backdropPath;
+    @SerializedName("genreIds")
+    private Integer[] genreIds;
     private String popularity;
     private String overview;
     public boolean isWatched = false;
@@ -25,44 +32,44 @@ public class MovieItem implements Serializable{
         this.title = title;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(String release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public String getVote_average() {
-        return vote_average;
+    public String getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(String vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public String getBackdrop_path() {
-        return backdrop_path;
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
-    public void setBackdrop_path(String backdrop_path) {
-        this.backdrop_path = backdrop_path;
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
-    public Integer[] getGenre_ids() {
-        return genre_ids;
+    public Integer[] getGenreIds() {
+        return genreIds;
     }
 
-    public void setGenre_ids(Integer[] genre_ids) {
-        this.genre_ids = genre_ids;
+    public void setGenreIds(Integer[] genreIds) {
+        this.genreIds = genreIds;
     }
 
     public String getOverview() {

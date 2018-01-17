@@ -7,7 +7,6 @@ package uk.co.sszymanski.cinema.pojo;
 public class Watched {
     private int id;
 
-
     public Watched(int id) {
         this.id = id;
     }

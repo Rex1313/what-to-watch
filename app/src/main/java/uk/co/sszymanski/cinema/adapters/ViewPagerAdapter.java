@@ -33,19 +33,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return position < 3?getFragments().get(position):new InfoFragment();
+        return position < 3 ? getFragments().get(position) : new InfoFragment();
     }
 
 
-    private void setUpFragments(){
+    private void setUpFragments() {
         fragments = new ArrayList<>();
-        StoryFragment storyFragment = new StoryFragment();
-        fragments.add(0, storyFragment);
-        InfoFragment infoFragment = new InfoFragment();
-        fragments.add(1, infoFragment);
-        MediaFragment mediaFragment = new MediaFragment();
-        fragments.add(2,mediaFragment);
-
+        fragments.add(0, StoryFragment.newInstance());
+        fragments.add(1, InfoFragment.newInstance());
+        fragments.add(2, MediaFragment.newInstance());
     }
 
     @Override

@@ -18,9 +18,10 @@ import uk.co.sszymanski.cinema.pojo.GenresWrapper;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Map;
 
 public class SplashActivity extends BaseActivity {
-    private Gson gson;
+    private final String TAG = getClass().getSimpleName();
     private GlobalApplication app;
     private RecyclerView categoryRecyclerView;
     private ProgressBar progressBar;
@@ -34,25 +35,24 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void init() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         String mainScreenTitle = this.getResources().getString(R.string.main_screen_title);
         toolbar.setTitle(mainScreenTitle);
         setSupportActionBar(toolbar);
-        this.gson = new Gson();
         this.app = (GlobalApplication) this.getApplicationContext();
-        this.categoryRecyclerView = (RecyclerView) findViewById(R.id.category_recycler_view);
-        this.progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        downloadGenres();
+        this.categoryRecyclerView = findViewById(R.id.recycler_view_category);
+        this.progressBar = findViewById(R.id.progress_bar);
+        downloadGenres(app.getGenres());
     }
 
-    private void downloadGenres() {
+    private void downloadGenres(final Map<Integer, String> genresMap) {
 
         ApiService.getGenres(new ApiCallbacks() {
             @Override
             public void onRequestSuccess(String response) {
-                GenresWrapper genresItem = gson.fromJson(response, GenresWrapper.class);
+                GenresWrapper genresItem = new Gson().fromJson(response, GenresWrapper.class);
                 for (GenresItem item : genresItem.getGenres()) {
-                    app.getGenres().put(item.getId(), item.getName());
+                    genresMap.put(item.getId(), item.getName());
                 }
                 loadCategoryAdapter(genresItem.getGenres());
                 progressBar.setVisibility(View.GONE);
@@ -71,18 +71,17 @@ public class SplashActivity extends BaseActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 4);
             categoryRecyclerView.setLayoutManager(manager);
-            adapter.notifyDataSetChanged();
+            categoryRecyclerView.getAdapter().notifyDataSetChanged();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
             categoryRecyclerView.setLayoutManager(manager);
-            adapter.notifyDataSetChanged();
+            categoryRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 
     private void loadCategoryAdapter(List<GenresItem> genres) {
-        adapter = new CategoryRecyclerAdapter(this, genres);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         categoryRecyclerView.setLayoutManager(gridLayoutManager);
-        categoryRecyclerView.setAdapter(adapter);
+        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(this, genres));
     }
 }

@@ -26,7 +26,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
     // TODO create rest endpoint
     private static final String SERVER_URL = "http://92.222.75.54/cinema/";
-    public static final String[] CATEGORY_IMAGE_LINKS = new String[]{
+    public final String[] CATEGORY_IMAGE_LINKS = new String[]{
             SERVER_URL + "action.png",
             SERVER_URL + "adventure.png",
             SERVER_URL + "animation.png",
@@ -90,9 +90,9 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
 
         CategoryHolder(View itemView) {
             super(itemView);
-            this.categoryIcon = (ImageView) itemView.findViewById(R.id.category_icon);
-            this.categoryDescription = (TextView) itemView.findViewById(R.id.category_description);
-            this.mainLayout = (CardView) itemView.findViewById(R.id.main_layout);
+            this.categoryIcon =  itemView.findViewById(R.id.category_icon);
+            this.categoryDescription =  itemView.findViewById(R.id.category_description);
+            this.mainLayout =  itemView.findViewById(R.id.main_layout);
         }
     }
 }

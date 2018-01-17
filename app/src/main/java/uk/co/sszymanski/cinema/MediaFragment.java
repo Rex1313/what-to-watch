@@ -20,6 +20,7 @@ import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.MovieVideoItem;
 import uk.co.sszymanski.cinema.pojo.MovieVideoWrapper;
+import uk.co.sszymanski.cinema.utils.StaticValues;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -28,10 +29,9 @@ import com.squareup.picasso.Picasso;
 
 public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     private final String TAG = getClass().getSimpleName();
-    private final String YOUTUBE_THUMB_PATH = "http://img.youtube.com/vi/";
     private View rootView;
 
-    private OnFragmentInteractionListener listener;
+    private MediaFragmentInteractions listener;
 
     public MediaFragment() {
         // Required empty public constructor
@@ -39,7 +39,7 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     }
 
 
-    public static MediaFragment newInstance(String param1, String param2) {
+    public static MediaFragment newInstance() {
         return  new MediaFragment();
     }
 
@@ -48,8 +48,6 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_media, container, false);
         if (savedInstanceState == null) {
-
-
             ApiService.getMovieVideos(listener.getMovieItem().getId(), new ApiCallbacks() {
                 @Override
                 public void onRequestSuccess(String response) {
@@ -80,11 +78,11 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     private void createVideoThumb(final MovieVideoItem item)
     {
         RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, null);
-        TextView title = (TextView) wrapper.findViewById(R.id.title);
+        TextView title = wrapper.findViewById(R.id.title);
         title.setText(item.getName());
-        ImageView screenshot = (ImageView) wrapper.findViewById(R.id.youtube_screenshot);
-        Picasso.with(getActivity()).load(YOUTUBE_THUMB_PATH+ item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
-        ImageButton button = (ImageButton) wrapper.findViewById(R.id.play_button);
+        ImageView screenshot =  wrapper.findViewById(R.id.youtube_screenshot);
+        Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH+ item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
+        ImageButton button = wrapper.findViewById(R.id.play_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,8 +102,8 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
+        if (context instanceof MediaFragmentInteractions) {
+            listener = (MediaFragmentInteractions) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement StoryFragmentInteractions");
@@ -134,11 +132,7 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
 
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-
-        String getStory();
+    public interface MediaFragmentInteractions {
 
         MovieItem getMovieItem();
     }

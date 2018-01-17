@@ -15,15 +15,12 @@ import uk.co.sszymanski.cinema.pojo.OmdbMovieItem;
 public class InfoFragment extends Fragment {
     private View rootView;
 
-    private String info;
-
-
     public InfoFragment() {
         // Required empty public constructor
     }
 
     public static InfoFragment newInstance() {
-        return  new InfoFragment();
+        return new InfoFragment();
     }
 
     @Override
@@ -60,10 +57,10 @@ public class InfoFragment extends Fragment {
 
     public void populateInfo(OmdbMovieItem item) {
         if (rootView != null) {
-            TextView director = (TextView) rootView.findViewById(R.id.director_value);
-            TextView writer = (TextView) rootView.findViewById(R.id.writer_value);
-            TextView actors = (TextView) rootView.findViewById(R.id.actors_value);
-            TextView awards = (TextView) rootView.findViewById(R.id.awards_value);
+            TextView director = rootView.findViewById(R.id.director_value);
+            TextView writer = rootView.findViewById(R.id.writer_value);
+            TextView actors = rootView.findViewById(R.id.actors_value);
+            TextView awards = rootView.findViewById(R.id.awards_value);
             director.setText(item.getDirector());
             writer.setText(item.getWriter());
             StringBuilder actorsString = new StringBuilder();

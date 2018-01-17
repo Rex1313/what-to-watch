@@ -31,12 +31,10 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements MovieRecyclerInteractions {
     private final String TAG = getClass().getSimpleName();
-    private RecyclerView mMovieRecyclerView;
-    private List<MovieItem> mCurrentList = new ArrayList<>();
-    private MovieRecyclerAdapter mAdapter;
-    private ProgressBar mProgressBar;
-    private SearchView mSearchView;
-    private Gson mGson = new Gson();
+    private RecyclerView movieRecyclerView;
+    private List<MovieItem> currentList = new ArrayList<>();
+    private MovieRecyclerAdapter adapter;
+    private ProgressBar progressBar;
     private int selectedCategory;
     private int page = 1;
     private int totalPages = 0;
@@ -47,15 +45,15 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         selectedCategory = getIntent().getIntExtra("category", 0);
-        mMovieRecyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
-        mAdapter = new MovieRecyclerAdapter(this, mCurrentList);
+        movieRecyclerView =  findViewById(R.id.movies_recycler_view);
+        adapter = new MovieRecyclerAdapter(this, currentList);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mMovieRecyclerView.setLayoutManager(linearLayoutManager);
-        mMovieRecyclerView.setAdapter(mAdapter);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        movieRecyclerView.setLayoutManager(linearLayoutManager);
+        movieRecyclerView.setAdapter(adapter);
+        progressBar =  findViewById(R.id.progress_bar);
         mPreferenceUtils = new PreferencesUtils(this);
         watched = mPreferenceUtils.getWatchedMovies();
         loadMovieList();
@@ -66,12 +64,12 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
-            mMovieRecyclerView.setLayoutManager(manager);
-            mMovieRecyclerView.getAdapter().notifyDataSetChanged();
+            movieRecyclerView.setLayoutManager(manager);
+            movieRecyclerView.getAdapter().notifyDataSetChanged();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
-            mMovieRecyclerView.setLayoutManager(manager);
-            mMovieRecyclerView.getAdapter().notifyDataSetChanged();
+            movieRecyclerView.setLayoutManager(manager);
+            movieRecyclerView.getAdapter().notifyDataSetChanged();
         }
 
 
@@ -84,9 +82,9 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     @Override
     protected void onResume() {
         super.onResume();
-        if (mMovieRecyclerView != null && mPreferenceUtils != null) {
+        if (movieRecyclerView != null && mPreferenceUtils != null) {
             this.watched = mPreferenceUtils.getWatchedMovies();
-            MovieRecyclerAdapter adapter = (MovieRecyclerAdapter) mMovieRecyclerView.getAdapter();
+            MovieRecyclerAdapter adapter = (MovieRecyclerAdapter) movieRecyclerView.getAdapter();
             List<MovieItem> items = adapter.getList();
             adapter.refreshAdapter(setWatchedMovies(items));
         }
@@ -96,10 +94,10 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         ApiService.getMovieList(page, selectedCategory,new ApiCallbacks() {
             @Override
             public void onRequestSuccess(String response) {
-                MainItem item = mGson.fromJson(response, MainItem.class);
+                MainItem item = new Gson().fromJson(response, MainItem.class);
                 totalPages = item.getTotalPages();
-                mAdapter.appendAdapterData(setWatchedMovies(item.getResults()));
-                mProgressBar.setVisibility(View.GONE);
+                adapter.appendAdapterData(setWatchedMovies(item.getResults()));
+                progressBar.setVisibility(View.GONE);
                 getSupportActionBar().setTitle(String.valueOf(page) + "/" + String.valueOf(totalPages));
             }
 
@@ -138,8 +136,8 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         MenuItem showWatchedCheckbox = menu.getItem(1);
         boolean isDisplayWatched = mPreferenceUtils.isDisplayWatched();
         showWatchedCheckbox.setChecked(isDisplayWatched);
-        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -152,8 +150,8 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                   ApiService.getMovieList(newText, new ApiCallbacks() {
                         @Override
                         public void onRequestSuccess(String response) {
-                            MainItem item = mGson.fromJson(response, MainItem.class);
-                            mAdapter.refreshAdapter(setWatchedMovies(item.getResults()));
+                            MainItem item = new Gson().fromJson(response, MainItem.class);
+                            adapter.refreshAdapter(setWatchedMovies(item.getResults()));
                         }
 
                         @Override
@@ -162,7 +160,7 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                         }
                     });
                 } else {
-                    mAdapter.refreshAdapter(new ArrayList<MovieItem>());
+                    adapter.refreshAdapter(new ArrayList<MovieItem>());
                     loadMovieList();
                 }
                 return true;
@@ -183,16 +181,16 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                 if (item.isChecked()) {
                     item.setChecked(false);
                     mPreferenceUtils.setDisplayWatched(false);
-                    mAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
 
                 } else {
                     item.setChecked(true);
                     mPreferenceUtils.setDisplayWatched(true);
-                    mAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
 
                 }
                 this.watched = mPreferenceUtils.getWatchedMovies();
-                mAdapter.refreshAdapter(new ArrayList<MovieItem>());
+                adapter.refreshAdapter(new ArrayList<MovieItem>());
                 loadMovieList();
                 break;
         }

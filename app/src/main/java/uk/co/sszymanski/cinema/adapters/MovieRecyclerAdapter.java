@@ -30,6 +30,7 @@ import java.util.List;
  * Created by rex on 10/13/2016.
  */
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieHolder> {
+    private final String TAG = getClass().getSimpleName();
     private Context context;
     private List<MovieItem> mList = new ArrayList<>();
     private MovieRecyclerInteractions callback;
@@ -39,7 +40,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         try {
             this.callback = (MovieRecyclerInteractions) context;
         } catch (ClassCastException e) {
-            Log.e(this.getClass().getSimpleName()," Activity calling this adapter needs to implement MovieRecyclerInteractions interface");
+            Log.e(TAG, " Activity calling this adapter needs to implement MovieRecyclerInteractions interface");
         }
         this.mList = mList;
     }
@@ -55,16 +56,16 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         setFadeAnimation(holder.itemView, position);
         holder.title.setText(mList.get(position).getTitle());
-        if (!mList.get(position).getRelease_date().equals("")) {
-            holder.year.setText(mList.get(position).getRelease_date().substring(0, 4));
+        if (!mList.get(position).getReleaseDate().equals("")) {
+            holder.year.setText(mList.get(position).getReleaseDate().substring(0, 4));
         }
         if(mList.get(position).isWatched){
             holder.watched.setVisibility(View.VISIBLE);
         }else{
             holder.watched.setVisibility(View.GONE);
         }
-        holder.time.setText(mList.get(position).getVote_average());
-        Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + mList.get(position).getPoster_path()).fit().centerCrop().into(holder.cover);
+        holder.time.setText(mList.get(position).getVoteAverage());
+        Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + mList.get(position).getPosterPath()).fit().centerCrop().into(holder.cover);
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,12 +137,12 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         public MovieHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.title);
-            year = (TextView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.release_date);
-            time = (TextView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.vote_average);
-            cover = (ImageView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.movie_cover);
-            backdrop = (ImageView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.backdrop);
-            watched = (TextView) itemView.findViewById(uk.co.sszymanski.cinema.R.id.watched_textview);
+            title = itemView.findViewById(uk.co.sszymanski.cinema.R.id.title);
+            year =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.release_date);
+            time =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.vote_average);
+            cover =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.movie_cover);
+            backdrop = itemView.findViewById(uk.co.sszymanski.cinema.R.id.backdrop);
+            watched = itemView.findViewById(uk.co.sszymanski.cinema.R.id.watched_textview);
             mainLayout = (CardView) itemView;
 
         }

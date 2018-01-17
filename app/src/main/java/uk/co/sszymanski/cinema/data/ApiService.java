@@ -16,7 +16,7 @@ public class ApiService {
                 .url(StaticValues.OMDB_BASE_URL)
                 .arg("apiKey", StaticValues.OMDB_API_KEY)
                 .arg("t", movieItem.getTitle().replace("'", "").replace(":", ""))
-                .arg("y", movieItem.getRelease_date().substring(0, 4))
+                .arg("y", movieItem.getReleaseDate().substring(0, 4))
                 .arg("tomatoes", "true")
                 .build().start(callback);
     }

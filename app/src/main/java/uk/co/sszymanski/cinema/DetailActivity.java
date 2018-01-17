@@ -25,7 +25,7 @@ import uk.co.sszymanski.cinema.utils.StaticValues;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends BaseActivity implements StoryFragment.StoryFragmentInteractions, MediaFragment.OnFragmentInteractionListener {
+public class DetailActivity extends BaseActivity implements StoryFragment.StoryFragmentInteractions, MediaFragment.MediaFragmentInteractions {
     private final int INFO_FRAGMENT_POSITION = 1;
 
     private ImageView backdrop, cover;
@@ -41,7 +41,7 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -108,17 +108,17 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
 
 
     private void init() {
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        backdrop = (ImageView) findViewById(R.id.backdrop);
-        title = (TextView) findViewById(R.id.title);
-        genre = (TextView) findViewById(R.id.genre);
-        cover = (ImageView) findViewById(R.id.movie_cover);
-        Picasso.with(this).load(StaticValues.POSTER_500_BASE_URL + movieItem.getPoster_path()).fit().centerCrop().into(cover);
-        duration = (TextView) findViewById(R.id.duration);
-        tomatoesRating = (TextView) findViewById(R.id.tomatoes_rating);
-        mainRating = (TextView) findViewById(R.id.main_rating);
-        imdbRating = (TextView) findViewById(R.id.imdb_rating);
-        watchedCheckbox = (CheckBox) findViewById(R.id.watched_checkbox);
+        progressBar =  findViewById(R.id.progress_bar);
+        backdrop = findViewById(R.id.backdrop);
+        title =  findViewById(R.id.title);
+        genre =  findViewById(R.id.genre);
+        cover = findViewById(R.id.movie_cover);
+        Picasso.with(this).load(StaticValues.POSTER_500_BASE_URL + movieItem.getPosterPath()).fit().centerCrop().into(cover);
+        duration = findViewById(R.id.duration);
+        tomatoesRating =  findViewById(R.id.tomatoes_rating);
+        mainRating =  findViewById(R.id.main_rating);
+        imdbRating = findViewById(R.id.imdb_rating);
+        watchedCheckbox = findViewById(R.id.watched_checkbox);
         watchedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -132,9 +132,9 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         watchedCheckbox.setChecked(movieItem.isWatched);
         toolbar.setTitle(movieItem.getTitle());
         // Initialization of ViewPager
-        ViewPager pager = (ViewPager) findViewById(R.id.view_pager);
+        ViewPager pager =  findViewById(R.id.view_pager);
         initializeViewPager(pager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.pager_header);
+        TabLayout tabLayout =  findViewById(R.id.pager_header);
         setTablayoutToViewpager(tabLayout, pager);
     }
 
@@ -152,18 +152,18 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
 
 
     private void populateLayout() {
-        Picasso.with(this).load(StaticValues.POSTER_1000_BASE_URL + movieItem.getBackdrop_path()).fit().centerCrop().into(backdrop);
+        Picasso.with(this).load(StaticValues.POSTER_1000_BASE_URL + movieItem.getBackdropPath()).fit().centerCrop().into(backdrop);
         title.setText(movieItem.getTitle());
         StringBuilder genreString = new StringBuilder();
-        for (int i = 0; i < movieItem.getGenre_ids().length; i++) {
+        for (int i = 0; i < movieItem.getGenreIds().length; i++) {
             if (i != 0) {
                 genreString.append(", ");
             }
 
-            genreString.append(app.getGenres().get(movieItem.getGenre_ids()[i]));
+            genreString.append(app.getGenres().get(movieItem.getGenreIds()[i]));
         }
         genre.setText(genreString.toString());
-        mainRating.setText(movieItem.getVote_average());
+        mainRating.setText(movieItem.getVoteAverage());
     }
 
     @Override
