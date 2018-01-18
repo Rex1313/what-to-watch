@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import uk.co.sszymanski.cinema.adapters.MovieRecyclerAdapter;
 
 import uk.co.sszymanski.cinema.data.ApiService;
+import uk.co.sszymanski.cinema.data.DatabaseHelper;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.interfaces.MovieRecyclerInteractions;
 import uk.co.sszymanski.cinema.pojo.MainItem;
@@ -29,34 +30,54 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements MovieRecyclerInteractions {
+public class MainActivity extends BaseActivity implements MovieRecyclerInteractions, SearchView.OnQueryTextListener {
     private final String TAG = getClass().getSimpleName();
     private RecyclerView movieRecyclerView;
-    private List<MovieItem> currentList = new ArrayList<>();
-    private MovieRecyclerAdapter adapter;
     private ProgressBar progressBar;
-    private int selectedCategory;
-    private int page = 1;
-    private int totalPages = 0;
+    private DatabaseHelper dbHelper;
     private List<Watched> watched;
-    private PreferencesUtils mPreferenceUtils;
+    private int categoryId;
+    private PreferencesUtils preferenceUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        selectedCategory = getIntent().getIntExtra("category", 0);
-        movieRecyclerView =  findViewById(R.id.movies_recycler_view);
-        adapter = new MovieRecyclerAdapter(this, currentList);
+        categoryId = getIntent().getIntExtra("categoryId", 0);
+        String categoryString = getIntent().getStringExtra("categoryName");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(categoryString);
+        }
+
+        init();
+        ApiService.getMovieList(1, categoryId, new ApiCallbacks() {
+            @Override
+            public void onRequestSuccess(String response) {
+                MainItem mainItem = new Gson().fromJson(response, MainItem.class);
+                if (movieRecyclerView.getAdapter() == null) {
+                    movieRecyclerView.setAdapter(new MovieRecyclerAdapter(MainActivity.this, mainItem));
+                }
+                updateRecyclerViewAdapter(mainItem, true);
+            }
+
+            @Override
+            public void onRequestFailed(Exception e) {
+                Log.e(TAG, e.toString());
+            }
+        });
+    }
+
+
+    private void init() {
+        movieRecyclerView = findViewById(R.id.movies_recycler_view);
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
         movieRecyclerView.setLayoutManager(linearLayoutManager);
-        movieRecyclerView.setAdapter(adapter);
-        progressBar =  findViewById(R.id.progress_bar);
-        mPreferenceUtils = new PreferencesUtils(this);
-        watched = mPreferenceUtils.getWatchedMovies();
-        loadMovieList();
+        progressBar = findViewById(R.id.progress_bar);
+        preferenceUtils = new PreferencesUtils(this);
+        dbHelper = new DatabaseHelper(this);
+        watched = dbHelper.getWatchedMovies();
     }
 
     @Override
@@ -71,41 +92,22 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
             movieRecyclerView.setLayoutManager(manager);
             movieRecyclerView.getAdapter().notifyDataSetChanged();
         }
-
-
-    }
-
-    public List<Watched> getWatched() {
-        return this.watched;
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
-        if (movieRecyclerView != null && mPreferenceUtils != null) {
-            this.watched = mPreferenceUtils.getWatchedMovies();
-            MovieRecyclerAdapter adapter = (MovieRecyclerAdapter) movieRecyclerView.getAdapter();
-            List<MovieItem> items = adapter.getList();
-            adapter.refreshAdapter(setWatchedMovies(items));
-        }
+        super.onResume(); // ????
+//        if (movieRecyclerView != null && preferenceUtils != null) {
+//            this.watched = dbHelper.getWatchedMovies();
+//            MovieRecyclerAdapter adapter = (MovieRecyclerAdapter) movieRecyclerView.getAdapter();
+//            List<MovieItem> items = adapter.getList();
+//
+//            adapter.refreshAdapter(setWatchedMovies(items));
+//        }
     }
 
-    private void loadMovieList() {
-        ApiService.getMovieList(page, selectedCategory,new ApiCallbacks() {
-            @Override
-            public void onRequestSuccess(String response) {
-                MainItem item = new Gson().fromJson(response, MainItem.class);
-                totalPages = item.getTotalPages();
-                adapter.appendAdapterData(setWatchedMovies(item.getResults()));
-                progressBar.setVisibility(View.GONE);
-                getSupportActionBar().setTitle(String.valueOf(page) + "/" + String.valueOf(totalPages));
-            }
-
-            @Override
-            public void onRequestFailed(Exception e) {
-                Log.e(TAG, e.toString());
-            }
-        });
+    private void loadMovieList(final int page, int categoryId, ApiCallbacks callback) {
+        ApiService.getMovieList(page, categoryId, callback);
     }
 
     private List<MovieItem> setWatchedMovies(List<MovieItem> movies) {
@@ -117,7 +119,7 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                 }
             }
         }
-        if (!mPreferenceUtils.isDisplayWatched()) {
+        if (!preferenceUtils.isDisplayWatched()) {
             List<MovieItem> items = new ArrayList<>();
             for (MovieItem movieItem : movies) {
                 if (!movieItem.isWatched) {
@@ -134,44 +136,13 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         MenuItem showWatchedCheckbox = menu.getItem(1);
-        boolean isDisplayWatched = mPreferenceUtils.isDisplayWatched();
+        boolean isDisplayWatched = preferenceUtils.isDisplayWatched();
         showWatchedCheckbox.setChecked(isDisplayWatched);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (!newText.isEmpty()) {
-                  ApiService.getMovieList(newText, new ApiCallbacks() {
-                        @Override
-                        public void onRequestSuccess(String response) {
-                            MainItem item = new Gson().fromJson(response, MainItem.class);
-                            adapter.refreshAdapter(setWatchedMovies(item.getResults()));
-                        }
-
-                        @Override
-                        public void onRequestFailed(Exception e) {
-                            Log.e(TAG, e.toString());
-                        }
-                    });
-                } else {
-                    adapter.refreshAdapter(new ArrayList<MovieItem>());
-                    loadMovieList();
-                }
-                return true;
-
-            }
-
-        });
+        searchView.setOnQueryTextListener(this);
         return true;
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -180,29 +151,87 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
             case R.id.action_display_watched:
                 if (item.isChecked()) {
                     item.setChecked(false);
-                    mPreferenceUtils.setDisplayWatched(false);
-                    adapter.notifyDataSetChanged();
+                    preferenceUtils.setDisplayWatched(false);
+                    movieRecyclerView.getAdapter().notifyDataSetChanged();
 
                 } else {
                     item.setChecked(true);
-                    mPreferenceUtils.setDisplayWatched(true);
-                    adapter.notifyDataSetChanged();
+                    preferenceUtils.setDisplayWatched(true);
+                    movieRecyclerView.getAdapter().notifyDataSetChanged();
 
                 }
-                this.watched = mPreferenceUtils.getWatchedMovies();
-                adapter.refreshAdapter(new ArrayList<MovieItem>());
-                loadMovieList();
+                this.watched = preferenceUtils.getWatchedMovies();
+//                ((MovieRecyclerAdapter)movieRecyclerView.getAdapter()).refreshAdapter(new ArrayList<MovieItem>());
+//                loadMovieList(); // ?????????
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateRecyclerViewAdapter(MainItem mainitem, boolean replaceData) {
+        ((MovieRecyclerAdapter) movieRecyclerView.getAdapter()).refreshAdapter(mainitem, replaceData);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void clearMovieAdapterData() {
+        ((MovieRecyclerAdapter) movieRecyclerView.getAdapter()).clearAllData();
+        progressBar.setVisibility(View.GONE);
+    }
+
     @Override
-    public void loadNextPage() {
+    public void loadNextPage(int page, int totalPages) {
         if (page < totalPages) {
-            page++;
-            loadMovieList();
+            ApiService.getMovieList(page, categoryId, new ApiCallbacks() {
+                @Override
+                public void onRequestSuccess(String response) {
+                    MainItem mainItem = new Gson().fromJson(response, MainItem.class);
+                    updateRecyclerViewAdapter(mainItem, false);
+                }
+
+                @Override
+                public void onRequestFailed(Exception e) {
+
+                }
+            });
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!newText.isEmpty()) {
+            ApiService.getMovieList(newText, new ApiCallbacks() {
+                @Override
+                public void onRequestSuccess(String response) {
+                    MainItem item = new Gson().fromJson(response, MainItem.class);
+                    updateRecyclerViewAdapter(item, true);
+                }
+
+                @Override
+                public void onRequestFailed(Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            });
+        } else {
+
+            clearMovieAdapterData();
+            ApiService.getMovieList(1, categoryId, new ApiCallbacks() {
+                @Override
+                public void onRequestSuccess(String response) {
+                    updateRecyclerViewAdapter(new Gson().fromJson(response, MainItem.class), true);
+                }
+
+                @Override
+                public void onRequestFailed(Exception e) {
+
+                }
+            });
+        }
+        return true;
     }
 }
 

@@ -1,8 +1,8 @@
 package uk.co.sszymanski.cinema;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,12 +28,7 @@ public class StoryFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_story, container, false);
         // Inflate the layout for this fragment
@@ -58,14 +53,13 @@ public class StoryFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView infoText = view.findViewById(R.id.story_text);
         infoText.setText(mListener.getStory());
     }
 
     public interface StoryFragmentInteractions {
-        void onFragmentInteraction(Uri uri);
         String getStory();
     }
 }

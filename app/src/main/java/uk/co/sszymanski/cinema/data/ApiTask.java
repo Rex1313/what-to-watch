@@ -29,7 +29,6 @@ public class ApiTask extends AsyncTask<Void, Void, String> {
     }
 
     public ApiTask(Builder apiTaskBuilder) {
-        String apiKey = apiTaskBuilder.apiKey;
         this.baseUrl = apiTaskBuilder.url;
         this.requestUrl = buildUrlRequest(apiTaskBuilder);
 
@@ -49,11 +48,6 @@ public class ApiTask extends AsyncTask<Void, Void, String> {
         }
         return uri.build().toString();
 
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
     }
 
     @Override

@@ -25,7 +25,6 @@ public class SplashActivity extends BaseActivity {
     private GlobalApplication app;
     private RecyclerView categoryRecyclerView;
     private ProgressBar progressBar;
-    private CategoryRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

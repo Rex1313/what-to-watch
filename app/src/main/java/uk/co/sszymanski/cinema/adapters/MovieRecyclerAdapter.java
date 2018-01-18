@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import uk.co.sszymanski.cinema.DetailActivity;
 import uk.co.sszymanski.cinema.MainActivity;
+import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.interfaces.MovieRecyclerInteractions;
+import uk.co.sszymanski.cinema.pojo.MainItem;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.utils.StaticHelper;
 import uk.co.sszymanski.cinema.utils.StaticValues;
@@ -32,17 +34,20 @@ import java.util.List;
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieHolder> {
     private final String TAG = getClass().getSimpleName();
     private Context context;
-    private List<MovieItem> mList = new ArrayList<>();
+    private List<MovieItem> movieItems = new ArrayList<>();
     private MovieRecyclerInteractions callback;
     private int lastPosition = -1;
-    public MovieRecyclerAdapter(Context context, List<MovieItem> mList) {
+    private int pageLoaded = -1;
+    private int totalPages = -1;
+    public MovieRecyclerAdapter(Context context, MainItem resultItem) {
         this.context = context;
+        this.movieItems = resultItem.getResults();
+        this.totalPages = resultItem.getTotalPages();
         try {
             this.callback = (MovieRecyclerInteractions) context;
         } catch (ClassCastException e) {
             Log.e(TAG, " Activity calling this adapter needs to implement MovieRecyclerInteractions interface");
         }
-        this.mList = mList;
     }
 
     @Override
@@ -53,25 +58,24 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     @Override
     public void onBindViewHolder(final MovieHolder holder, final int position) {
+        final MovieItem movieItem = movieItems.get(position);
+
 
         setFadeAnimation(holder.itemView, position);
-        holder.title.setText(mList.get(position).getTitle());
-        if (!mList.get(position).getReleaseDate().equals("")) {
-            holder.year.setText(mList.get(position).getReleaseDate().substring(0, 4));
+        holder.title.setText(movieItem.getTitle());
+        if (!movieItem.getReleaseDate().equals("")) {
+            holder.year.setText(movieItem.getReleaseDate().substring(0, 4));
         }
-        if(mList.get(position).isWatched){
-            holder.watched.setVisibility(View.VISIBLE);
-        }else{
-            holder.watched.setVisibility(View.GONE);
-        }
-        holder.time.setText(mList.get(position).getVoteAverage());
-        Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + mList.get(position).getPosterPath()).fit().centerCrop().into(holder.cover);
+        holder.watched.setVisibility(movieItem.isWatched?View.VISIBLE:View.GONE);
+
+        holder.time.setText(movieItem.getVoteAverage());
+        Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + movieItems.get(position).getPosterPath()).fit().centerCrop().into(holder.cover);
 
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("movieItem", mList.get(position));
+                intent.putExtra("movieItem", movieItems.get(position));
                 Pair<View, String> pair = Pair.create((View)holder.mainLayout, "card");
                 Pair<View, String> pair2 = Pair.create((View)holder.cover, "cover");
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context, pair, pair2);
@@ -81,25 +85,26 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if(mList.get(position).isWatched){
-                    StaticHelper.removeWatched(context, mList.get(position).getId());
-                    mList.get(position).isWatched=false;
+                if(movieItem.isWatched){
+                    StaticHelper.removeWatched(context, movieItems.get(position).getId());
+                    movieItem.isWatched=false;
                 }else{
-                    StaticHelper.addWatched(context, mList.get(position).getId());
-                    mList.get(position).isWatched=true;
+                    StaticHelper.addWatched(context, movieItems.get(position).getId());
+                    movieItem.isWatched=true;
                 }
                 notifyItemChanged(position);
                 return true;
             }
         });
-        if (position == mList.size() - 1) {
-            callback.loadNextPage();
+        if (position == movieItems.size() - 1) {
+            pageLoaded++;
+            callback.loadNextPage(pageLoaded, totalPages);
         }
 
 
     }
     public List<MovieItem> getList(){
-        return this.mList;
+        return this.movieItems;
     }
     @Override
     public void onViewDetachedFromWindow(MovieHolder holder)
@@ -108,7 +113,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     }
     @Override
     public int getItemCount() {
-        return mList.size();
+        return movieItems.size();
     }
     private void setFadeAnimation(View view, int position) {
         if(position > lastPosition) {
@@ -119,16 +124,21 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         }
     }
 
-    public void refreshAdapter(List<MovieItem> list) {
-        this.mList = list;
-        notifyDataSetChanged();
-    }
-    public void appendAdapterData(List<MovieItem> list) {
-        this.mList.addAll(list);
+    public void refreshAdapter(MainItem mainItem, boolean replaceData) {
+        if(replaceData) {
+            totalPages = mainItem.getTotalPages();
+            pageLoaded = 0;
+            this.movieItems = mainItem.getResults();
+        }else {
+            this.movieItems.addAll(mainItem.getResults());
+        }
         notifyDataSetChanged();
     }
 
-
+    public void clearAllData(){
+        this.movieItems.clear();
+        notifyDataSetChanged();
+    }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
         TextView title, year, time ,watched;
@@ -137,16 +147,16 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         public MovieHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(uk.co.sszymanski.cinema.R.id.title);
-            year =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.release_date);
-            time =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.vote_average);
-            cover =  itemView.findViewById(uk.co.sszymanski.cinema.R.id.movie_cover);
-            backdrop = itemView.findViewById(uk.co.sszymanski.cinema.R.id.backdrop);
-            watched = itemView.findViewById(uk.co.sszymanski.cinema.R.id.watched_textview);
+            title = itemView.findViewById(R.id.title);
+            year =  itemView.findViewById(R.id.releaseDate);
+            time =  itemView.findViewById(R.id.voteAverage);
+            cover =  itemView.findViewById(R.id.movie_cover);
+            backdrop = itemView.findViewById(R.id.backdrop);
+            watched = itemView.findViewById(R.id.watched_textview);
             mainLayout = (CardView) itemView;
 
         }
-        public void clearAnimation()
+        protected void clearAnimation()
         {
             mainLayout.clearAnimation();
         }

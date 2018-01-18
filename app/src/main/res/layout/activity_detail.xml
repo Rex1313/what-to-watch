@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/watched_checkbox"
                     android:gravity="center"
-                    android:text="Watched"
+                    android:text="@string/watched"
                     android:foregroundGravity="center"
                     />
             </LinearLayout>

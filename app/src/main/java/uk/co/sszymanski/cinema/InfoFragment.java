@@ -1,8 +1,7 @@
 package uk.co.sszymanski.cinema;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +23,7 @@ public class InfoFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_info, container, false);
         // Inflate the layout for this fragment
@@ -38,22 +31,6 @@ public class InfoFragment extends Fragment {
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-    }
 
     public void populateInfo(OmdbMovieItem item) {
         if (rootView != null) {
@@ -64,18 +41,13 @@ public class InfoFragment extends Fragment {
             director.setText(item.getDirector());
             writer.setText(item.getWriter());
             StringBuilder actorsString = new StringBuilder();
-            String[] actorsArray = item.getActors().split(",");
+            String[] actorsArray = item.getActors()==null?item.getActors().split(","):new String[0];
             for (String actor : actorsArray) {
                 actorsString.append(actor.trim()).append("\n");
             }
             actors.setText(actorsString.toString());
             awards.setText(item.getAwards());
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
 }

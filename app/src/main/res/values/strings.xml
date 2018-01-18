@@ -5,7 +5,7 @@
     <string name="years_label">years</string>
     <string name="rating_label">rating</string>
     <string name="search_button">search</string>
-    <string name="recomended">Recommended</string>
+    <string name="recommended">Recommended</string>
     <string name="director_label">Director: </string>
     <string name="writer_label">Writer: </string>
     <string name="actors_label">Actors: </string>
@@ -15,6 +15,9 @@
     <string name="main_screen_header">What\'s on your mind ?</string>
     <string name="main_screen_subheader">Watch Something</string>
     <string name="watched">WATCHED</string>
+    <string name="category">Category</string>
+    <string name="search">Search</string>
+    <string name="display_watched">Display Watched</string>
     // arrays
     <string-array name="fragment_titles">
         <item>Story</item>

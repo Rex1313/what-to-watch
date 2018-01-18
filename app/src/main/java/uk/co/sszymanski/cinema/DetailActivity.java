@@ -1,6 +1,5 @@
 package uk.co.sszymanski.cinema;
 
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TabLayout;
@@ -16,9 +15,11 @@ import android.widget.TextView;
 
 import uk.co.sszymanski.cinema.adapters.ViewPagerAdapter;
 import uk.co.sszymanski.cinema.data.ApiService;
+import uk.co.sszymanski.cinema.data.DatabaseHelper;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.OmdbMovieItem;
+import uk.co.sszymanski.cinema.pojo.Watched;
 import uk.co.sszymanski.cinema.utils.StaticHelper;
 import uk.co.sszymanski.cinema.utils.StaticValues;
 
@@ -36,6 +37,7 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private CheckBox watchedCheckbox;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
 
         app = (GlobalApplication) getApplicationContext();
         movieItem = (MovieItem) getIntent().getSerializableExtra("movieItem");
+        dbHelper = new DatabaseHelper(this);
         init();
         populateLayout();
         populateExtraInfo(new Gson(), movieItem);
@@ -101,12 +104,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         fragment.populateInfo(item);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-
     private void init() {
         progressBar =  findViewById(R.id.progress_bar);
         backdrop = findViewById(R.id.backdrop);
@@ -121,12 +118,19 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         watchedCheckbox = findViewById(R.id.watched_checkbox);
         watchedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    StaticHelper.addWatched(DetailActivity.this, movieItem.getId());
-                } else {
-                    StaticHelper.removeWatched(DetailActivity.this, movieItem.getId());
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                if (b) {
+//                    StaticHelper.addWatched(DetailActivity.this, movieItem.getId());
+//                } else {
+//                    StaticHelper.removeWatched(DetailActivity.this, movieItem.getId());
+//                }
+                Watched watched = new Watched(movieItem.getId());
+                if(isChecked) {
+                    dbHelper.addWatchedMovie(watched);
+                }else {
+                    dbHelper.removeWatchedMovie(watched);
                 }
+
             }
         });
         watchedCheckbox.setChecked(movieItem.isWatched);
@@ -166,10 +170,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         mainRating.setText(movieItem.getVoteAverage());
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     public String getStory() {

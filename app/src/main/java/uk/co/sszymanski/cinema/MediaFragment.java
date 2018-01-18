@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +44,7 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_media, container, false);
         if (savedInstanceState == null) {
@@ -71,13 +71,14 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     }
 
     /**
-     * This method creates a video thumbail for youtube video and adds it to rootView
+     * This method creates a video thumbnail for youtube video and adds it to rootView
      *
      * @param item Video item
      */
     private void createVideoThumb(final MovieVideoItem item)
     {
-        RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, null);
+        LinearLayout container = rootView.findViewById(R.id.screenshot_wrapper);
+        RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, container, false);
         TextView title = wrapper.findViewById(R.id.title);
         title.setText(item.getName());
         ImageView screenshot =  wrapper.findViewById(R.id.youtube_screenshot);
@@ -91,12 +92,11 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+item.getKey()));
                 intent.putExtra("VIDEO_ID", item.getKey());
                 intent.putExtra("force_fullscreen",true);
-                getActivity().startActivity(intent);
+                if(getActivity()!=null) getActivity().startActivity(intent);
+
             }
         });
-
-
-        ((LinearLayout) rootView.findViewById(R.id.screenshot_wrapper)).addView(wrapper);
+        container.addView(wrapper);
     }
 
     @Override
@@ -114,12 +114,6 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     public void onDetach() {
         super.onDetach();
         listener = null;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override

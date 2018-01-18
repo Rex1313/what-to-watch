@@ -14,8 +14,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

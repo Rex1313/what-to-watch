@@ -10,15 +10,15 @@ import java.io.Serializable;
 public class MovieItem implements Serializable{
     private int id;
     private String title;
-    @SerializedName("releaseDate")
+    @SerializedName("release_date")
     private String releaseDate;
-    @SerializedName("voteAverage")
+    @SerializedName("vote_average")
     private String voteAverage;
-    @SerializedName("posterPath")
+    @SerializedName("poster_path")
     private String posterPath;
-    @SerializedName("backdropPath")
+    @SerializedName("backdrop_path")
     private String backdropPath;
-    @SerializedName("genreIds")
+    @SerializedName("genre_ids")
     private Integer[] genreIds;
     private String popularity;
     private String overview;

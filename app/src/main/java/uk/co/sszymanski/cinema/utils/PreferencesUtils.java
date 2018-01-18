@@ -29,6 +29,7 @@ public class PreferencesUtils {
         String serializedList = gson.toJson(watchedMovies, type);
         preferences.edit().putString("watchedMoviesList", serializedList).commit();
 
+
     }
 
     public List<Watched> getWatchedMovies(){
