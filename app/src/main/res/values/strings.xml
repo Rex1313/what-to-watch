@@ -18,6 +18,9 @@
     <string name="category">Category</string>
     <string name="search">Search</string>
     <string name="display_watched">Display Watched</string>
+    <string name="connection_error_message" >There is problem with internet connection. Make sure your connection is fine and restart the application</string>
+    <string name="ok_button">OK</string>
+    <string name="connection_error_title">Network Error</string>
     // arrays
     <string-array name="fragment_titles">
         <item>Story</item>

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import uk.co.sszymanski.cinema.MainActivity;
+import uk.co.sszymanski.cinema.activities.MainActivity;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.pojo.GenresItem;
 

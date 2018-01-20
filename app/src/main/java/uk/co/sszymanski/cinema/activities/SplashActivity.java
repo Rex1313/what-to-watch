@@ -1,22 +1,28 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import uk.co.sszymanski.cinema.GlobalApplication;
+import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.adapters.CategoryRecyclerAdapter;
 import uk.co.sszymanski.cinema.data.ApiService;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.pojo.GenresItem;
 import uk.co.sszymanski.cinema.pojo.GenresWrapper;
+import uk.co.sszymanski.cinema.utils.DialogUtils;
 
 
 import com.google.gson.Gson;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +65,15 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onRequestFailed(Exception e) {
-
+                progressBar.setVisibility(View.GONE);
+                if (e instanceof UnknownHostException) {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            DialogUtils.getSimpleAlertDialog(getString(R.string.connection_error_message), getString(R.string.connection_error_title), SplashActivity.this).show();
+                        }
+                    });
+                }
             }
         });
     }

@@ -1,8 +1,10 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import uk.co.sszymanski.cinema.R;
 
 /**
  * Created by rex on 10/16/2016.

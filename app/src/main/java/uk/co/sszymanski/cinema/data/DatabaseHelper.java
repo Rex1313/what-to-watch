@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.Watched;
 
 /**
@@ -97,13 +98,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Watched> watchedList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                Watched watched = new Watched(cursor.getColumnIndex(COLUMN_WATCHED_ID));
+                Watched watched = new Watched(cursor.getInt(cursor.getColumnIndex(COLUMN_WATCHED_ID)));
                 watchedList.add(watched);
 
             } while (cursor.moveToNext());
         }
         cursor.close();
         return watchedList;
+    }
+
+    private List<MovieItem> filterOutWatchedMovies(List<MovieItem> items){
+
     }
 
     public void addWatchedMovie(Watched watched){

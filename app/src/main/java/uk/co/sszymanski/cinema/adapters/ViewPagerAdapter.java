@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import uk.co.sszymanski.cinema.InfoFragment;
-import uk.co.sszymanski.cinema.MediaFragment;
+import uk.co.sszymanski.cinema.fragments.InfoFragment;
+import uk.co.sszymanski.cinema.fragments.MediaFragment;
 import uk.co.sszymanski.cinema.R;
-import uk.co.sszymanski.cinema.StoryFragment;
+import uk.co.sszymanski.cinema.fragments.StoryFragment;
 
 import java.util.ArrayList;
 import java.util.List;

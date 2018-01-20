@@ -1,4 +1,4 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.pojo.OmdbMovieItem;
 
 
@@ -15,7 +16,6 @@ public class InfoFragment extends Fragment {
     private View rootView;
 
     public InfoFragment() {
-        // Required empty public constructor
     }
 
     public static InfoFragment newInstance() {
@@ -26,10 +26,8 @@ public class InfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_info, container, false);
-        // Inflate the layout for this fragment
         return rootView;
     }
-
 
 
     public void populateInfo(OmdbMovieItem item) {
@@ -41,7 +39,7 @@ public class InfoFragment extends Fragment {
             director.setText(item.getDirector());
             writer.setText(item.getWriter());
             StringBuilder actorsString = new StringBuilder();
-            String[] actorsArray = item.getActors()==null?item.getActors().split(","):new String[0];
+            String[] actorsArray = item.getActors() != null ? item.getActors().split(",") : new String[0];
             for (String actor : actorsArray) {
                 actorsString.append(actor.trim()).append("\n");
             }
@@ -49,5 +47,8 @@ public class InfoFragment extends Fragment {
             awards.setText(item.getAwards());
         }
     }
+
+
+
 
 }

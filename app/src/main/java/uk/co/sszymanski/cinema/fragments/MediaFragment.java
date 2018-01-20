@@ -1,4 +1,4 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.data.ApiService;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.MovieVideoItem;
 import uk.co.sszymanski.cinema.pojo.MovieVideoWrapper;
+import uk.co.sszymanski.cinema.utils.DialogUtils;
 import uk.co.sszymanski.cinema.utils.StaticValues;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -34,8 +36,6 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     private MediaFragmentInteractions listener;
 
     public MediaFragment() {
-        // Required empty public constructor
-
     }
 
 
@@ -63,7 +63,7 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
 
                 @Override
                 public void onRequestFailed(Exception e) {
-
+                    DialogUtils.displayNetworkConnectionDialog(e, getActivity());
                 }
             });
         }

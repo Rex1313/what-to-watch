@@ -1,4 +1,4 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.sszymanski.cinema.R;
+
 
 public class StoryFragment extends Fragment {
 
@@ -19,7 +21,6 @@ public class StoryFragment extends Fragment {
     private StoryFragmentInteractions mListener;
 
     public StoryFragment() {
-        // Required empty public constructor
     }
 
 
@@ -31,7 +32,6 @@ public class StoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_story, container, false);
-        // Inflate the layout for this fragment
         return rootView;
     }
 

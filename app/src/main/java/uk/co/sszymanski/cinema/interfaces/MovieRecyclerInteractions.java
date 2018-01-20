@@ -5,4 +5,6 @@ package uk.co.sszymanski.cinema.interfaces;
  */
 public interface MovieRecyclerInteractions {
     void loadNextPage(int page, int totalPages);
+    void addWatchedMovie(int movieId);
+    void removeWatchedMovie(int movieId);
 }

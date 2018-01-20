@@ -11,6 +11,11 @@ import uk.co.sszymanski.cinema.utils.StaticValues;
 public class ApiService {
 
 
+    /**
+     * Gets Extra information from OMDB api based on Movie Title and release year from TMDB Api
+     * @param movieItem MovieItem object build from TMB request
+     * @param callback ApiCallback interface, result will be delivered through onRequestSuccess method
+     */
     public static void getExtraMovieInfo(MovieItem movieItem, ApiCallbacks callback) {
         new ApiTask.Builder()
                 .url(StaticValues.OMDB_BASE_URL)
@@ -21,6 +26,10 @@ public class ApiService {
                 .build().start(callback);
     }
 
+    /**
+     * Get all genres available in TMDB Api
+     * @param callback ApiCallback interface, result will be delivered through onRequestSuccess method
+     */
     public static void getGenres(ApiCallbacks callback) {
         new ApiTask.Builder()
                 .url(StaticValues.TMDB_GENRES_URL)
@@ -28,7 +37,13 @@ public class ApiService {
                 .build().start(callback);
     }
 
-    public static void getMovieList(int page, int category, ApiCallbacks callback) {
+    /**
+     * Get list of movies from TMDB Api based on selected category and page number
+     * @param page page number of request
+     * @param category category of movies
+     * @param callback ApiCallback interface, result will be delivered through onRequestSuccess method
+     */
+    public static void getSearchMovieList(int page, int category, ApiCallbacks callback) {
         new ApiTask.Builder()
                 .url(StaticValues.TMDB_API_URL)
                 .apiKey(StaticValues.TMDB_API_KEY)
@@ -40,7 +55,12 @@ public class ApiService {
                 .build().start(callback);
     }
 
-    public static void getMovieList(String query, ApiCallbacks callback) {
+    /**
+     * Get list of movies based on search query i.e "Bat" will return all movies whose title includes "Bat" sequence
+     * @param query query to search
+     * @param callback ApiCallback interface, result will be delivered through onRequestSuccess method
+     */
+    public static void getSearchMovieList(String query, ApiCallbacks callback) {
         new ApiTask.Builder()
                 .url(StaticValues.TMDB_API_URL)
                 .apiKey(StaticValues.TMDB_API_KEY)
@@ -50,6 +70,11 @@ public class ApiService {
                 .build().start(callback);
     }
 
+    /**
+     * Get list of video media related to specific movie
+     * @param movieId TMBD movie id
+     * @param callback ApiCallback interface, result will be delivered through onRequestSuccess method
+     */
     public static void getMovieVideos(int movieId, ApiCallbacks callback){
         new ApiTask.Builder()
                 .url(StaticValues.TMDB_API_URL)

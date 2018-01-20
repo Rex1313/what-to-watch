@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class ApiTask extends AsyncTask<Void, Void, String> {
             }
             response = builder.toString();
         } catch (Exception e) {
+            callback.onRequestFailed(e);
 
             e.printStackTrace();
             return "";
@@ -125,7 +127,6 @@ public class ApiTask extends AsyncTask<Void, Void, String> {
             paths.add(key);
             return this;
         }
-
 
 
         public ApiTask build() {

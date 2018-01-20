@@ -1,4 +1,4 @@
-package uk.co.sszymanski.cinema;
+package uk.co.sszymanski.cinema.activities;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -13,14 +13,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import uk.co.sszymanski.cinema.GlobalApplication;
+import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.adapters.ViewPagerAdapter;
 import uk.co.sszymanski.cinema.data.ApiService;
 import uk.co.sszymanski.cinema.data.DatabaseHelper;
+import uk.co.sszymanski.cinema.fragments.InfoFragment;
+import uk.co.sszymanski.cinema.fragments.MediaFragment;
+import uk.co.sszymanski.cinema.fragments.StoryFragment;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.OmdbMovieItem;
 import uk.co.sszymanski.cinema.pojo.Watched;
-import uk.co.sszymanski.cinema.utils.StaticHelper;
+import uk.co.sszymanski.cinema.utils.DialogUtils;
 import uk.co.sszymanski.cinema.utils.StaticValues;
 
 import com.google.gson.Gson;
@@ -36,7 +41,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
     private ViewPagerAdapter pagerAdapter;
     private ProgressBar progressBar;
     private Toolbar toolbar;
-    private CheckBox watchedCheckbox;
     private DatabaseHelper dbHelper;
 
     @Override
@@ -80,15 +84,13 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
                             populateExtraInfo(omdbMovieItem);
                             populateInfoFragment((InfoFragment) pagerAdapter.getFragments().get(INFO_FRAGMENT_POSITION), omdbMovieItem);
                             progressBar.setVisibility(View.GONE);
-
                         }
                     });
                 }
             }
-
             @Override
             public void onRequestFailed(Exception e) {
-
+                DialogUtils.getSimpleAlertDialog(getString(R.string.connection_error_message, DetailActivity.this), getString(R.string.connection_error_title), DetailActivity.this);
             }
         });
     }
@@ -115,15 +117,10 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         tomatoesRating =  findViewById(R.id.tomatoes_rating);
         mainRating =  findViewById(R.id.main_rating);
         imdbRating = findViewById(R.id.imdb_rating);
-        watchedCheckbox = findViewById(R.id.watched_checkbox);
+        CheckBox watchedCheckbox = findViewById(R.id.watched_checkbox);
         watchedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if (b) {
-//                    StaticHelper.addWatched(DetailActivity.this, movieItem.getId());
-//                } else {
-//                    StaticHelper.removeWatched(DetailActivity.this, movieItem.getId());
-//                }
                 Watched watched = new Watched(movieItem.getId());
                 if(isChecked) {
                     dbHelper.addWatchedMovie(watched);
@@ -135,7 +132,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         });
         watchedCheckbox.setChecked(movieItem.isWatched);
         toolbar.setTitle(movieItem.getTitle());
-        // Initialization of ViewPager
         ViewPager pager =  findViewById(R.id.view_pager);
         initializeViewPager(pager);
         TabLayout tabLayout =  findViewById(R.id.pager_header);
@@ -163,7 +159,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
             if (i != 0) {
                 genreString.append(", ");
             }
-
             genreString.append(app.getGenres().get(movieItem.getGenreIds()[i]));
         }
         genre.setText(genreString.toString());
@@ -180,6 +175,5 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
     public MovieItem getMovieItem() {
         return this.movieItem;
     }
-
 
 }

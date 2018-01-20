@@ -9,6 +9,9 @@
         <item name="colorControlHighlight">#40ffffff</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
     <style name="ThemeToolbarDarkOverflow" parent="Theme.AppCompat.NoActionBar">
         <!-- android:textColorPrimary is the  color of the title text
              in the Toolbar, in the Theme.AppCompat theme:  -->

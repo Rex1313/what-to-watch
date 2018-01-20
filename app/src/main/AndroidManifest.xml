@@ -12,12 +12,12 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="uk.co.sszymanski.cinema.MainActivity"
+        <activity android:name="uk.co.sszymanski.cinema.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             >
 
         </activity>
-        <activity android:name="uk.co.sszymanski.cinema.SplashActivity"
+        <activity android:name="uk.co.sszymanski.cinema.activities.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             >
 
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="uk.co.sszymanski.cinema.DetailActivity"
+            android:name="uk.co.sszymanski.cinema.activities.DetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 

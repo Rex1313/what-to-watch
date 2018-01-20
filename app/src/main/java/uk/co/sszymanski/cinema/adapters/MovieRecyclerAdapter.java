@@ -14,13 +14,12 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import uk.co.sszymanski.cinema.DetailActivity;
-import uk.co.sszymanski.cinema.MainActivity;
+import uk.co.sszymanski.cinema.activities.DetailActivity;
+import uk.co.sszymanski.cinema.activities.MainActivity;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.interfaces.MovieRecyclerInteractions;
 import uk.co.sszymanski.cinema.pojo.MainItem;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
-import uk.co.sszymanski.cinema.utils.StaticHelper;
 import uk.co.sszymanski.cinema.utils.StaticValues;
 
 import com.squareup.picasso.Picasso;
@@ -86,10 +85,12 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             @Override
             public boolean onLongClick(View view) {
                 if(movieItem.isWatched){
-                    StaticHelper.removeWatched(context, movieItems.get(position).getId());
+                    //StaticHelper.removeWatched(context, movieItems.get(position).getId());
+                    callback.removeWatchedMovie(movieItem.getId());
                     movieItem.isWatched=false;
                 }else{
-                    StaticHelper.addWatched(context, movieItems.get(position).getId());
+                    //StaticHelper.addWatched(context, movieItems.get(position).getId());
+                    callback.addWatchedMovie(movieItem.getId());
                     movieItem.isWatched=true;
                 }
                 notifyItemChanged(position);
