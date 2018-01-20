@@ -32,5 +32,5 @@ dependencies {
     implementation 'com.google.apis:google-api-services-youtube:v3-rev178-1.22.0'
     'com.annimon:stream:1.1.9'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    compile 'com.annimon:stream:1.1.9'
+    implementation'com.annimon:stream:1.1.9'
 }
