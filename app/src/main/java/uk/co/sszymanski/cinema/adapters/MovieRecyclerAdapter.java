@@ -70,32 +70,24 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         holder.time.setText(movieItem.getVoteAverage());
         Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + movieItems.get(position).getPosterPath()).fit().centerCrop().into(holder.cover);
 
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("movieItem", movieItems.get(position));
-                Pair<View, String> pair = Pair.create((View)holder.mainLayout, "card");
-                Pair<View, String> pair2 = Pair.create((View)holder.cover, "cover");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context, pair, pair2);
-                context.startActivity(intent, options.toBundle());
-            }
+        holder.mainLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("movieItem", movieItems.get(position));
+            Pair<View, String> pair = Pair.create(holder.mainLayout, "card");
+            Pair<View, String> pair2 = Pair.create(holder.cover, "cover");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context, pair, pair2);
+            context.startActivity(intent, options.toBundle());
         });
-        holder.mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(movieItem.isWatched){
-                    //StaticHelper.removeWatched(context, movieItems.get(position).getId());
-                    callback.removeWatchedMovie(movieItem.getId());
-                    movieItem.isWatched=false;
-                }else{
-                    //StaticHelper.addWatched(context, movieItems.get(position).getId());
-                    callback.addWatchedMovie(movieItem.getId());
-                    movieItem.isWatched=true;
-                }
-                notifyItemChanged(position);
-                return true;
+        holder.mainLayout.setOnLongClickListener(view -> {
+            if(movieItem.isWatched){
+                callback.removeWatchedMovie(movieItem.getId());
+                movieItem.isWatched=false;
+            }else{
+                callback.addWatchedMovie(movieItem.getId());
+                movieItem.isWatched=true;
             }
+            notifyItemChanged(position);
+            return true;
         });
         if (position == movieItems.size() - 1) {
             pageLoaded++;

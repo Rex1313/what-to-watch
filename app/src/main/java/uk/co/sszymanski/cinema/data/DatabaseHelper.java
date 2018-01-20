@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -108,7 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private List<MovieItem> filterOutWatchedMovies(List<MovieItem> items){
-
+                return null;
     }
 
     public void addWatchedMovie(Watched watched){

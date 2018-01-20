@@ -26,7 +26,6 @@ import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.Watched;
 import uk.co.sszymanski.cinema.utils.DialogUtils;
 import uk.co.sszymanski.cinema.utils.PreferencesUtils;
-
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -143,7 +142,7 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
 
 
     private void updateRecyclerViewAdapter(MainItem mainitem, boolean replaceData) {
-            for(MovieItem movieItem: mainitem.getResults()) {
+        for(MovieItem movieItem: mainitem.getResults()) {
                 for(Watched watched: watched){
                     if(watched.getId()==movieItem.getId()) {
                         movieItem.isWatched=true;

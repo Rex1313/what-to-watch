@@ -67,12 +67,8 @@ public class SplashActivity extends BaseActivity {
             public void onRequestFailed(Exception e) {
                 progressBar.setVisibility(View.GONE);
                 if (e instanceof UnknownHostException) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialogUtils.getSimpleAlertDialog(getString(R.string.connection_error_message), getString(R.string.connection_error_title), SplashActivity.this).show();
-                        }
-                    });
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            DialogUtils.getSimpleAlertDialog(getString(R.string.connection_error_message), getString(R.string.connection_error_title), SplashActivity.this).show());
                 }
             }
         });

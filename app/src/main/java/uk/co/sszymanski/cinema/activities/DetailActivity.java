@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,12 +53,7 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
 
         app = (GlobalApplication) getApplicationContext();
         movieItem = (MovieItem) getIntent().getSerializableExtra("movieItem");
@@ -78,13 +72,10 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
             public void onRequestSuccess(String response) {
                 final OmdbMovieItem omdbMovieItem = gson.fromJson(response, OmdbMovieItem.class);
                 if (omdbMovieItem != null) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            populateExtraInfo(omdbMovieItem);
-                            populateInfoFragment((InfoFragment) pagerAdapter.getFragments().get(INFO_FRAGMENT_POSITION), omdbMovieItem);
-                            progressBar.setVisibility(View.GONE);
-                        }
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        populateExtraInfo(omdbMovieItem);
+                        populateInfoFragment((InfoFragment) pagerAdapter.getFragments().get(INFO_FRAGMENT_POSITION), omdbMovieItem);
+                        progressBar.setVisibility(View.GONE);
                     });
                 }
             }
@@ -118,17 +109,14 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         mainRating =  findViewById(R.id.main_rating);
         imdbRating = findViewById(R.id.imdb_rating);
         CheckBox watchedCheckbox = findViewById(R.id.watched_checkbox);
-        watchedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                Watched watched = new Watched(movieItem.getId());
-                if(isChecked) {
-                    dbHelper.addWatchedMovie(watched);
-                }else {
-                    dbHelper.removeWatchedMovie(watched);
-                }
-
+        watchedCheckbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            Watched watched = new Watched(movieItem.getId());
+            if(isChecked) {
+                dbHelper.addWatchedMovie(watched);
+            }else {
+                dbHelper.removeWatchedMovie(watched);
             }
+
         });
         watchedCheckbox.setChecked(movieItem.isWatched);
         toolbar.setTitle(movieItem.getTitle());

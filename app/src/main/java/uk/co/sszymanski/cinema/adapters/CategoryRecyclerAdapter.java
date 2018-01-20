@@ -67,14 +67,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryRecycl
     public void onBindViewHolder(CategoryHolder holder, final int position) {
         Picasso.with(context).load(CATEGORY_IMAGE_LINKS[position]).fit().into(holder.categoryIcon);
         holder.categoryDescription.setText(list.get(position).getName());
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("categoryId", list.get(position).getId());
-                intent.putExtra("categoryName", list.get(position).getName());
-                context.startActivity(intent);
-            }
+        holder.mainLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("categoryId", list.get(position).getId());
+            intent.putExtra("categoryName", list.get(position).getName());
+            context.startActivity(intent);
         });
 
     }
