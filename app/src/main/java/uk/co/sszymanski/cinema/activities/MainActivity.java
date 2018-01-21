@@ -33,6 +33,7 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements MovieRecyclerInteractions, SearchView.OnQueryTextListener {
     private final String TAG = getClass().getSimpleName();
     private RecyclerView movieRecyclerView;
+    private MovieRecyclerAdapter movieRecyclerAdapter;
     private ProgressBar progressBar;
     private DatabaseHelper dbHelper;
     private List<Watched> watched;
@@ -57,7 +58,8 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
             public void onRequestSuccess(String response) {
                 MainItem mainItem = new Gson().fromJson(response, MainItem.class);
                 if (movieRecyclerView.getAdapter() == null) {
-                    movieRecyclerView.setAdapter(new MovieRecyclerAdapter(MainActivity.this, mainItem));
+                    movieRecyclerAdapter = new MovieRecyclerAdapter(MainActivity.this, mainItem);
+                    movieRecyclerView.setAdapter(movieRecyclerAdapter);
                 }
                 updateRecyclerViewAdapter(mainItem, true);
             }
@@ -72,8 +74,13 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
 
     private void init() {
         movieRecyclerView = findViewById(R.id.movies_recycler_view);
-        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        movieRecyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerView.LayoutManager recyclerViewLayoutManager;
+        int orientation = getResources().getConfiguration().orientation;
+        recyclerViewLayoutManager = orientation==Configuration.ORIENTATION_PORTRAIT
+                ?new LinearLayoutManager(this)
+                :new GridLayoutManager(this, 2);
+        movieRecyclerView.setLayoutManager(recyclerViewLayoutManager);
+
         progressBar = findViewById(R.id.progress_bar);
         preferenceUtils = new PreferencesUtils(this);
         dbHelper = new DatabaseHelper(this);
@@ -85,8 +92,8 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     protected void onResume() {
         super.onResume();
         watched = getWatchedMovies(dbHelper);
-        if(movieRecyclerView.getAdapter()!=null)
-        movieRecyclerView.getAdapter().notifyDataSetChanged();
+        if (movieRecyclerView.getAdapter() != null)
+            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
     }
 
     @Override
@@ -95,11 +102,11 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
             movieRecyclerView.setLayoutManager(manager);
-            movieRecyclerView.getAdapter().notifyDataSetChanged();
+            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
             movieRecyclerView.setLayoutManager(manager);
-            movieRecyclerView.getAdapter().notifyDataSetChanged();
+            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
         }
     }
 
@@ -124,12 +131,12 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                 if (item.isChecked()) {
                     item.setChecked(false);
                     preferenceUtils.setDisplayWatched(false);
-                    movieRecyclerView.getAdapter().notifyDataSetChanged();
+                    movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
 
                 } else {
                     item.setChecked(true);
                     preferenceUtils.setDisplayWatched(true);
-                    movieRecyclerView.getAdapter().notifyDataSetChanged();
+                    movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
 
                 }
                 this.watched = dbHelper.getWatchedMovies();
@@ -139,17 +146,15 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     }
 
 
-
-
     private void updateRecyclerViewAdapter(MainItem mainitem, boolean replaceData) {
-        for(MovieItem movieItem: mainitem.getResults()) {
-                for(Watched watched: watched){
-                    if(watched.getId()==movieItem.getId()) {
-                        movieItem.isWatched=true;
-                    }
+        for (MovieItem movieItem : mainitem.getResults()) {
+            for (Watched watched : watched) {
+                if (watched.getId() == movieItem.getId()) {
+                    movieItem.isWatched = true;
                 }
             }
-        ((MovieRecyclerAdapter) movieRecyclerView.getAdapter()).refreshAdapter(mainitem, replaceData);
+        }
+        movieRecyclerAdapter.refreshAdapter(mainitem, replaceData, preferenceUtils.isDisplayWatched());
         progressBar.setVisibility(View.GONE);
     }
 
@@ -176,19 +181,23 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         }
     }
 
-    private List<Watched> getWatchedMovies(DatabaseHelper dbHelper){
-       return dbHelper.getWatchedMovies();
+    private List<Watched> getWatchedMovies(DatabaseHelper dbHelper) {
+        return dbHelper.getWatchedMovies();
     }
 
     @Override
     public void addWatchedMovie(int movieId) {
         dbHelper.addWatchedMovie(new Watched(movieId));
+        watched = dbHelper.getWatchedMovies();
+        movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
 
     }
 
     @Override
     public void removeWatchedMovie(int movieId) {
         dbHelper.removeWatchedMovie(new Watched(movieId));
+        watched = dbHelper.getWatchedMovies();
+        movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
     }
 
     @Override

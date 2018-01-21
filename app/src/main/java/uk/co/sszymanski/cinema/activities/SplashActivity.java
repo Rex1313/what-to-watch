@@ -89,8 +89,9 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void loadCategoryAdapter(List<GenresItem> genres) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-        categoryRecyclerView.setLayoutManager(gridLayoutManager);
+        int orientation = getResources().getConfiguration().orientation;
+        int spanCount = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount, GridLayoutManager.VERTICAL, false));
         categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(this, genres));
     }
 }
