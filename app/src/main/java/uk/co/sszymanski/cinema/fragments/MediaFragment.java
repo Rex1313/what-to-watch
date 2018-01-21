@@ -40,7 +40,7 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
 
 
     public static MediaFragment newInstance() {
-        return  new MediaFragment();
+        return new MediaFragment();
     }
 
     @Override
@@ -51,12 +51,13 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
             ApiService.getMovieVideos(listener.getMovieItem().getId(), new ApiCallbacks() {
                 @Override
                 public void onRequestSuccess(String response) {
-                    Gson gson = new Gson();
-                    final MovieVideoWrapper wrapper = gson.fromJson(response, MovieVideoWrapper.class);
+                    if (getActivity() != null) {
+                        final MovieVideoWrapper wrapper = new Gson().fromJson(response, MovieVideoWrapper.class);
 
-                    for (MovieVideoItem item : wrapper.getResults()) {
-                        if (item.getSite().equals("YouTube")) {
-                        createVideoThumb(item);
+                        for (MovieVideoItem item : wrapper.getResults()) {
+                            if (item.getSite().equals("YouTube")) {
+                                createVideoThumb(item);
+                            }
                         }
                     }
                 }
@@ -75,22 +76,21 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
      *
      * @param item Video item
      */
-    private void createVideoThumb(final MovieVideoItem item)
-    {
+    private void createVideoThumb(final MovieVideoItem item) {
         LinearLayout container = rootView.findViewById(R.id.screenshot_wrapper);
         RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, container, false);
         TextView title = wrapper.findViewById(R.id.title);
         title.setText(item.getName());
-        ImageView screenshot =  wrapper.findViewById(R.id.youtube_screenshot);
-        Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH+ item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
+        ImageView screenshot = wrapper.findViewById(R.id.youtube_screenshot);
+        Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH + item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
         ImageButton button = wrapper.findViewById(R.id.play_button);
         button.setOnClickListener(v -> {
 
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+item.getKey()));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + item.getKey()));
             intent.putExtra("VIDEO_ID", item.getKey());
-            intent.putExtra("force_fullscreen",true);
-            if(getActivity()!=null) getActivity().startActivity(intent);
+            intent.putExtra("force_fullscreen", true);
+            if (getActivity() != null) getActivity().startActivity(intent);
 
         });
         container.addView(wrapper);
