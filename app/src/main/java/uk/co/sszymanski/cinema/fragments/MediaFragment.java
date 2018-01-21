@@ -85,13 +85,10 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
         Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH + item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
         ImageButton button = wrapper.findViewById(R.id.play_button);
         button.setOnClickListener(v -> {
-
-
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + item.getKey()));
             intent.putExtra("VIDEO_ID", item.getKey());
             intent.putExtra("force_fullscreen", true);
             if (getActivity() != null) getActivity().startActivity(intent);
-
         });
         container.addView(wrapper);
     }

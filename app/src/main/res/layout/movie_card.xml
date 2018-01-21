@@ -6,8 +6,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_margin="12dp"
     card_view:cardBackgroundColor="@color/card_background"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="@dimen/radius_corner_card"
+    card_view:cardElevation="@dimen/elevation_card"
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -15,14 +15,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/cardview_movie_main_height"
         >
 
         <ImageView
             android:id="@+id/movie_cover"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/movie_cover_cardview_main"
             android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:transitionName="cover"
             />
 
@@ -33,7 +33,7 @@
             android:layout_toEndOf="@id/movie_cover"
             android:layout_marginTop="12dp"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
             />
 
@@ -43,11 +43,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_margin_small"
             android:layout_toEndOf="@id/movie_cover"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
-            android:text="2016" />
+            android:textSize="@dimen/text_size_medium"
+            />
 
         <TextView
             android:id="@+id/voteAverage"
@@ -56,18 +56,17 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="8dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="20dp"
-            android:textColor="@android:color/white"
-            android:text="22" />
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:textColor="@android:color/white" />
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/star_cardview_main_rating"
+            android:layout_height="@dimen/star_cardview_main_rating"
             android:src="@drawable/star"
             android:layout_toStartOf="@id/voteAverage"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="@dimen/activity_margin_small"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
 
             />
 <TextView
@@ -75,7 +74,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/watched_textview"
     android:textColor="@color/white_transparent"
-    android:textSize="40sp"
+    android:textSize="@dimen/watched_text_size"
     android:text="@string/watched"
     android:layout_toEndOf="@id/movie_cover"
     android:layout_centerInParent="true"

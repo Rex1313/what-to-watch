@@ -2,4 +2,20 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="radius_corner_card">2dp</dimen>
+    <dimen name="elevation_card">4dp</dimen>
+    <dimen name="cardview_movie_main_height">150dp</dimen>
+    <dimen name="movie_cover_cardview_main">120dp</dimen>
+    <dimen name="text_size_medium">12sp</dimen>
+    <dimen name="activity_margin_small">8dp</dimen>
+    <dimen name="star_cardview_main_rating">20dp</dimen>
+    <dimen name="watched_text_size">40dp</dimen>
+    <dimen name="cardview_movie_detail_height">240dp</dimen>
+    <dimen name="movie_cover_cardview_detail">180dp</dimen>
+    <dimen name="image_view_detail">20dp</dimen>
+    <dimen name="expandable_app_bar_layout_height">296dp</dimen> <!-- Icreased by Toolbar size -->
+    <dimen name="youtube_thumbnail_width">250dp</dimen>
+    <dimen name="youtube_play_button_size">40dp</dimen>
+    <dimen name="youtube_thumnail_height">150dp</dimen>
+    <dimen name="tab_layout_minimum_height">60dp</dimen>
 </resources>

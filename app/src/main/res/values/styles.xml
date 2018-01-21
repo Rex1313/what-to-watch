@@ -9,6 +9,10 @@
         <item name="colorControlHighlight">#40ffffff</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
+    <style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColor">@color/colorAccent</item>
     </style>

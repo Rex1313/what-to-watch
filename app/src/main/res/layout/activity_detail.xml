@@ -34,18 +34,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/gray_transparent"
                 android:padding="20dp">
-
-
-                <!--<TextView-->
-                <!--android:id="@+id/title"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="&#45;&#45;"-->
-                <!--android:textColor="@color/title_color"-->
-                <!--android:textSize="16sp"-->
-                <!--android:textStyle="bold" />-->
-
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
@@ -57,43 +45,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:minHeight="60dp"
+                    style="@style/TabLayoutStyle"
+                    android:minHeight="@dimen/tab_layout_minimum_height"
                     app:tabIndicatorColor="@android:color/white"
                     app:tabSelectedTextColor="@android:color/white"
                     app:tabTextColor="#ccc" />
 
-                <!--/>-->
-                <!--app:tabGravity="fill"-->
-                <!--app:tabIndicatorColor="@color/colorAccentSecondary"-->
-                <!--app:tabMode="fixed"-->
-                <!--app:tabSelectedTextColor="@color/colorAccentSecondary"-->
-                <!--app:tabTextAppearance="@style/TournamentWaitingTimerTabTextAppearance"-->
                 <android.support.v4.view.ViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/pager_header">
-
-
                 </android.support.v4.view.ViewPager>
-
-
-                <!--<ScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_below="@id/summary_layout"-->
-                <!--android:layout_margin="40dp"-->
-                <!--android:background="@android:color/white"-->
-                <!--android:padding="20dp"-->
-                <!--&gt;-->
-                <!--<TextView-->
-                <!--android:id="@+id/info"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="info"-->
-                <!--/>-->
-
-                <!--</ScrollView>-->
                 <ProgressBar
                     android:id="@+id/progress_bar"
                     android:layout_width="40dp"
@@ -107,7 +70,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="@dimen/expandable_app_bar_layout_height"
         android:background="@color/gray_transparent">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -117,35 +80,18 @@
             android:background="@color/gray_transparent"
             android:fitsSystemWindows="true"
             app:contentScrim="@color/gray_transparent"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
-
-            <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-            <!--<ImageView-->
-            <!--android:id="@+id/cover"-->
-            <!--android:layout_width="120dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:fitsSystemWindows="true"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--app:layout_collapseMode="parallax" />-->
-            <!--</RelativeLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="80dp"
+                android:paddingTop="?attr/actionBarSize"
                 app:layout_collapseMode="parallax">
 
                 <include
                     android:id="@+id/card_layout"
                     layout="@layout/detail_movie_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
                     />
             </LinearLayout>
 
@@ -171,10 +117,6 @@
             </LinearLayout>
 
             </android.support.v7.widget.Toolbar>
-
-
         </android.support.design.widget.CollapsingToolbarLayout>
-
-
     </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

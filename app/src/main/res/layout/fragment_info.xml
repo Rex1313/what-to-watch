@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="@dimen/activity_horizontal_margin"
         >
 
         <TextView
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/director_label"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
@@ -26,14 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_medium" />
         <TextView
             android:id="@+id/writer_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/writer_label"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
@@ -42,14 +42,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_medium" />
         <TextView
         android:id="@+id/actors_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:text="@string/actors_label"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_medium"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
 
@@ -58,14 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_medium" />
         <TextView
             android:id="@+id/awards_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/awards_label"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_medium"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
@@ -74,6 +74,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
 </ScrollView>

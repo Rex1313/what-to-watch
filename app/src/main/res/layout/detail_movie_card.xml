@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     card_view:cardBackgroundColor="@color/white_transparent"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="@dimen/radius_corner_card"
+    card_view:cardElevation="@dimen/elevation_card"
     android:focusable="true"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -15,44 +15,40 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="@dimen/cardview_movie_detail_height"
         >
-
-
-
-
         <ImageView
             android:id="@+id/movie_cover"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/movie_cover_cardview_detail"
             android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
             android:transitionName="cover"
             />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/movie_cover"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text=""
             android:maxLines="2"
             android:ellipsize="marquee"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
             />
         <TextView
             android:id="@+id/duration"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/activity_margin_small"
             android:layout_alignParentEnd="true"
             android:text="--"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
             />
         <!--<View-->
@@ -69,21 +65,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_margin_small"
             android:layout_toEndOf="@id/movie_cover"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_medium"
             android:text="" />
         <TextView
             android:id="@+id/genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/releaseDate"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/activity_margin_small"
             android:text="--"
             android:layout_toEndOf="@id/movie_cover"
             android:textColor="@color/title_color"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold" />
 
 
@@ -92,17 +88,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/genre"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:gravity="bottom"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/activity_margin_small"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_toEndOf="@id/movie_cover"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/image_view_detail"
+                android:layout_height="@dimen/image_view_detail"
                 android:layout_weight="0.5"
                 android:src="@drawable/star" />
 
@@ -110,16 +106,15 @@
                 android:id="@+id/main_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="0.5"
                 android:text="--"
                 android:textColor="@color/title_color"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/image_view_detail"
+                android:layout_height="@dimen/image_view_detail"
                 android:layout_weight="0.5"
                 android:src="@drawable/rotten" />
 
@@ -127,16 +122,15 @@
                 android:id="@+id/tomatoes_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="0.5"
                 android:text="--"
                 android:textColor="@color/title_color"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/image_view_detail"
+                android:layout_height="@dimen/image_view_detail"
                 android:layout_weight="0.5"
                 android:src="@drawable/imdb" />
 
@@ -144,11 +138,10 @@
                 android:id="@+id/imdb_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_weight="0.5"
                 android:text="--"
                 android:textColor="@color/title_color"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
 
