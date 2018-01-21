@@ -20,8 +20,11 @@ import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.interfaces.MovieRecyclerInteractions;
 import uk.co.sszymanski.cinema.pojo.MainItem;
 import uk.co.sszymanski.cinema.pojo.MovieItem;
+import uk.co.sszymanski.cinema.utils.PreferencesUtils;
 import uk.co.sszymanski.cinema.utils.StaticValues;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,14 +37,20 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     private final String TAG = getClass().getSimpleName();
     private Context context;
     private List<MovieItem> movieItems = new ArrayList<>();
+    private List<MovieItem> filteredList = new ArrayList<>();
     private MovieRecyclerInteractions callback;
     private int lastPosition = -1;
-    private int pageLoaded = -1;
+    private int pageLoaded = 0;
     private int totalPages = -1;
+    private boolean isDisplayWatched;
+
     public MovieRecyclerAdapter(Context context, MainItem resultItem) {
         this.context = context;
         this.movieItems = resultItem.getResults();
+        this.filteredList = filterOutWatchedMovies(movieItems);
         this.totalPages = resultItem.getTotalPages();
+        this.isDisplayWatched = new PreferencesUtils(context).isDisplayWatched();
+
         try {
             this.callback = (MovieRecyclerInteractions) context;
         } catch (ClassCastException e) {
@@ -51,65 +60,68 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     @Override
     public MovieHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(uk.co.sszymanski.cinema.R.layout.movie_card, parent, false);
-        return new MovieHolder(view);
+
+            View view = LayoutInflater.from(context).inflate(uk.co.sszymanski.cinema.R.layout.movie_card, parent, false);
+            return new MovieHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MovieHolder holder, final int position) {
-        final MovieItem movieItem = movieItems.get(position);
 
-
-        setFadeAnimation(holder.itemView, position);
-        holder.title.setText(movieItem.getTitle());
-        if (!movieItem.getReleaseDate().equals("")) {
-            holder.year.setText(movieItem.getReleaseDate().substring(0, 4));
-        }
-        holder.watched.setVisibility(movieItem.isWatched?View.VISIBLE:View.GONE);
-
-        holder.time.setText(movieItem.getVoteAverage());
-        Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + movieItems.get(position).getPosterPath()).fit().centerCrop().into(holder.cover);
-
-        holder.mainLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("movieItem", movieItems.get(position));
-            Pair<View, String> pair = Pair.create(holder.mainLayout, "card");
-            Pair<View, String> pair2 = Pair.create(holder.cover, "cover");
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity)context, pair, pair2);
-            context.startActivity(intent, options.toBundle());
-        });
-        holder.mainLayout.setOnLongClickListener(view -> {
-            if(movieItem.isWatched){
-                callback.removeWatchedMovie(movieItem.getId());
-                movieItem.isWatched=false;
-            }else{
-                callback.addWatchedMovie(movieItem.getId());
-                movieItem.isWatched=true;
+            final MovieItem movieItem = isDisplayWatched?movieItems.get(position):filteredList.get(position);
+            setTranslateAnimation(holder.itemView, position);
+            holder.title.setText(movieItem.getTitle());
+            if (!movieItem.getReleaseDate().equals("")) {
+                holder.year.setText(movieItem.getReleaseDate().substring(0, 4));
             }
-            notifyItemChanged(position);
-            return true;
-        });
-        if (position == movieItems.size() - 1) {
-            pageLoaded++;
-            callback.loadNextPage(pageLoaded, totalPages);
-        }
+            holder.watched.setVisibility(movieItem.isWatched ? View.VISIBLE : View.GONE);
 
+            holder.time.setText(movieItem.getVoteAverage());
+            Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + movieItem.getPosterPath()).fit().centerCrop().into(holder.cover);
+
+            holder.mainLayout.setOnClickListener(view -> {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("movieItem", movieItem);
+                Pair<View, String> pair = Pair.create(holder.mainLayout, "card");
+                Pair<View, String> pair2 = Pair.create(holder.cover, "cover");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity) context, pair, pair2);
+                context.startActivity(intent, options.toBundle());
+            });
+            holder.mainLayout.setOnLongClickListener(view -> {
+                if (movieItem.isWatched) {
+                    callback.removeWatchedMovie(movieItem.getId());
+                    movieItem.isWatched = false;
+                } else {
+                    callback.addWatchedMovie(movieItem.getId());
+                    movieItem.isWatched = true;
+                }
+                notifyItemChanged(position);
+                return true;
+            });
+            List<MovieItem> currentList = isDisplayWatched?movieItems:filteredList;
+            if (position == currentList.size() - 1) {
+                pageLoaded++;
+                callback.loadNextPage(pageLoaded, totalPages);
+            }
 
     }
-    public List<MovieItem> getList(){
+
+    public List<MovieItem> getList() {
         return this.movieItems;
     }
+
     @Override
-    public void onViewDetachedFromWindow(MovieHolder holder)
-    {
+    public void onViewDetachedFromWindow(MovieHolder holder) {
         holder.clearAnimation();
     }
+
     @Override
     public int getItemCount() {
-        return movieItems.size();
+        return isDisplayWatched?movieItems.size():filteredList.size();
     }
-    private void setFadeAnimation(View view, int position) {
-        if(position > lastPosition) {
+
+    private void setTranslateAnimation(View view, int position) {
+        if (position > lastPosition) {
             TranslateAnimation anim = new TranslateAnimation(-300, 0, 0, 0);
             anim.setDuration(300);
             view.startAnimation(anim);
@@ -117,40 +129,56 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         }
     }
 
-    public void refreshAdapter(MainItem mainItem, boolean replaceData) {
-        if(replaceData) {
+    private List<MovieItem> filterOutWatchedMovies(List<MovieItem> movieItems){
+        return Stream.of(movieItems).filter(movie->!movie.isWatched).collect(Collectors.toList());
+    }
+
+    public void notifyChange(boolean isDisplayWatched) {
+        filteredList = filterOutWatchedMovies(movieItems);
+        this.isDisplayWatched = isDisplayWatched;
+        notifyDataSetChanged();
+    }
+
+
+    public void refreshAdapter(MainItem mainItem, boolean replaceData, boolean isDisplayWatched) {
+        this.isDisplayWatched = isDisplayWatched;
+        if (replaceData) {
             totalPages = mainItem.getTotalPages();
-            pageLoaded = 0;
+            pageLoaded = 1;
             this.movieItems = mainItem.getResults();
-        }else {
+            this.filteredList = filterOutWatchedMovies(mainItem.getResults());
+        } else {
             this.movieItems.addAll(mainItem.getResults());
+            this.filteredList.addAll(filterOutWatchedMovies(mainItem.getResults()));
         }
         notifyDataSetChanged();
     }
 
-    public void clearAllData(){
+    public void clearAllData() {
         this.movieItems.clear();
         notifyDataSetChanged();
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
-        TextView title, year, time ,watched;
+        TextView title, year, time, watched;
         ImageView cover, backdrop;
         CardView mainLayout;
+        View rootView;
 
         public MovieHolder(View itemView) {
             super(itemView);
+            this.rootView = itemView;
             title = itemView.findViewById(R.id.title);
-            year =  itemView.findViewById(R.id.releaseDate);
-            time =  itemView.findViewById(R.id.voteAverage);
-            cover =  itemView.findViewById(R.id.movie_cover);
+            year = itemView.findViewById(R.id.releaseDate);
+            time = itemView.findViewById(R.id.voteAverage);
+            cover = itemView.findViewById(R.id.movie_cover);
             backdrop = itemView.findViewById(R.id.backdrop);
             watched = itemView.findViewById(R.id.watched_textview);
             mainLayout = (CardView) itemView;
 
         }
-        protected void clearAnimation()
-        {
+
+        protected void clearAnimation() {
             mainLayout.clearAnimation();
         }
     }
