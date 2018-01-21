@@ -26,6 +26,7 @@ import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.Watched;
 import uk.co.sszymanski.cinema.utils.DialogUtils;
 import uk.co.sszymanski.cinema.utils.PreferencesUtils;
+
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -60,6 +61,13 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
                 if (movieRecyclerView.getAdapter() == null) {
                     movieRecyclerAdapter = new MovieRecyclerAdapter(MainActivity.this, mainItem);
                     movieRecyclerView.setAdapter(movieRecyclerAdapter);
+                    movieRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+                            setFirstVisiblePosition();
+                        }
+                    });
                 }
                 updateRecyclerViewAdapter(mainItem, true);
             }
@@ -76,9 +84,9 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         movieRecyclerView = findViewById(R.id.movies_recycler_view);
         RecyclerView.LayoutManager recyclerViewLayoutManager;
         int orientation = getResources().getConfiguration().orientation;
-        recyclerViewLayoutManager = orientation==Configuration.ORIENTATION_PORTRAIT
-                ?new LinearLayoutManager(this)
-                :new GridLayoutManager(this, 2);
+        recyclerViewLayoutManager = orientation == Configuration.ORIENTATION_PORTRAIT
+                ? new LinearLayoutManager(this)
+                : new GridLayoutManager(this, 2);
         movieRecyclerView.setLayoutManager(recyclerViewLayoutManager);
 
         progressBar = findViewById(R.id.progress_bar);
@@ -87,6 +95,14 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         watched = dbHelper.getWatchedMovies();
     }
 
+    private void setFirstVisiblePosition() {
+        if (movieRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+            movieRecyclerAdapter.lastRecyclerViewPosition = ((LinearLayoutManager) movieRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        }
+        if (movieRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            movieRecyclerAdapter.lastRecyclerViewPosition = ((GridLayoutManager) movieRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -98,16 +114,26 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        Log.d(TAG, "configruation changed");
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
             movieRecyclerView.setLayoutManager(manager);
-            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
+            movieRecyclerAdapter.notifyDataSetChanged();
+            movieRecyclerView.scrollToPosition(movieRecyclerAdapter.lastRecyclerViewPosition);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
             movieRecyclerView.setLayoutManager(manager);
-            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
+            movieRecyclerAdapter.notifyDataSetChanged();
+            movieRecyclerView.scrollToPosition(movieRecyclerAdapter.lastRecyclerViewPosition);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        Log.d(TAG, "onDestroy called");
+        super.onDestroy();
     }
 
     @Override

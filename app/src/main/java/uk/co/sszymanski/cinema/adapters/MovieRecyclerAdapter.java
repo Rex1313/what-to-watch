@@ -42,6 +42,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     private int lastPosition = -1;
     private int pageLoaded = 0;
     private int totalPages = -1;
+    public int lastRecyclerViewPosition = 0;
     private boolean isDisplayWatched;
 
     public MovieRecyclerAdapter(Context context, MainItem resultItem) {
@@ -67,7 +68,6 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     @Override
     public void onBindViewHolder(final MovieHolder holder, final int position) {
-
             final MovieItem movieItem = isDisplayWatched?movieItems.get(position):filteredList.get(position);
             setTranslateAnimation(holder.itemView, position);
             holder.title.setText(movieItem.getTitle());
