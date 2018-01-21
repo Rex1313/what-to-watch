@@ -1,6 +1,6 @@
 #  What to watch
 Simple Android application for browsing movies.
-It purpose is to help you decide what to watch o
+It purpose is to help you decide what to watch or plan your next trip to cinema.
 ### Features
 - Browse list of movies based on one of few categories
 - Search any movie
