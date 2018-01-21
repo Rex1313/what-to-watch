@@ -79,11 +79,14 @@ public class SplashActivity extends BaseActivity {
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 4);
+
             categoryRecyclerView.setLayoutManager(manager);
+            if(categoryRecyclerView.getAdapter()!=null)
             categoryRecyclerView.getAdapter().notifyDataSetChanged();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             RecyclerView.LayoutManager manager = new GridLayoutManager(this, 2);
             categoryRecyclerView.setLayoutManager(manager);
+            if(categoryRecyclerView.getAdapter()!=null)
             categoryRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }
