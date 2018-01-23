@@ -1,7 +1,10 @@
 package uk.co.sszymanski.cinema.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +29,9 @@ import uk.co.sszymanski.cinema.pojo.MovieItem;
 import uk.co.sszymanski.cinema.pojo.Watched;
 import uk.co.sszymanski.cinema.utils.DialogUtils;
 import uk.co.sszymanski.cinema.utils.PreferencesUtils;
+import uk.co.sszymanski.cinema.utils.StaticValues;
 
+import com.annimon.stream.Stream;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -108,8 +113,10 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     protected void onResume() {
         super.onResume();
         watched = getWatchedMovies(dbHelper);
-        if (movieRecyclerView.getAdapter() != null)
+        if (movieRecyclerView.getAdapter() != null) {
+            watched = dbHelper.getWatchedMovies();
             movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
+        }
     }
 
     @Override
@@ -224,6 +231,38 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
         dbHelper.removeWatchedMovie(new Watched(movieId));
         watched = dbHelper.getWatchedMovies();
         movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
+    }
+
+    //This is called from MovieRecyclerView, it will start activity for result. as a result we are expecting id of the movie and watched boolean
+    @Override
+    public void onItemClicked(MovieRecyclerAdapter.MovieHolder holder, MovieItem item, int position) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("movieItem", item);
+        Pair<View, String> pair = Pair.create(holder.mainLayout, "card");
+        Pair<View, String> pair2 = Pair.create(holder.cover, "cover");
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pair, pair2);
+        startActivityForResult(intent, StaticValues.DETAIL_ACTIVITY_REQUEST_CODE, options.toBundle());
+    }
+
+    @Override
+    public void onItemLongPressed(MovieItem item, int position) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // If user changed watched checkbox in DetailsActivity we will get the result here and update MovieRecyclerAdapter
+        if (requestCode == StaticValues.DETAIL_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            boolean watched = data.getBooleanExtra("watched", false);
+            int movieId = data.getIntExtra("movieId", 0);
+            Stream.of(movieRecyclerAdapter.getList())
+                    .filter(movieItem -> movieItem.getId() == movieId)
+                    .findFirst()
+                    .ifPresent(movieItem -> movieItem.isWatched=watched);
+            movieRecyclerAdapter.notifyChange(preferenceUtils.isDisplayWatched());
+        }
     }
 
     @Override

@@ -80,14 +80,11 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             Picasso.with(context).load(StaticValues.POSTER_500_BASE_URL + movieItem.getPosterPath()).fit().centerCrop().into(holder.cover);
 
             holder.mainLayout.setOnClickListener(view -> {
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("movieItem", movieItem);
-                Pair<View, String> pair = Pair.create(holder.mainLayout, "card");
-                Pair<View, String> pair2 = Pair.create(holder.cover, "cover");
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity) context, pair, pair2);
-                context.startActivity(intent, options.toBundle());
+                callback.onItemClicked(holder,movieItem, position);
+
             });
             holder.mainLayout.setOnLongClickListener(view -> {
+                callback.onItemLongPressed(movieItem, position);
                 if (movieItem.isWatched) {
                     callback.removeWatchedMovie(movieItem.getId());
                     movieItem.isWatched = false;
@@ -160,10 +157,10 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
-        TextView title, year, time, watched;
-        ImageView cover, backdrop;
-        CardView mainLayout;
-        View rootView;
+        public TextView title, year, time, watched;
+        public ImageView cover, backdrop;
+        public CardView mainLayout;
+        public View rootView;
 
         public MovieHolder(View itemView) {
             super(itemView);

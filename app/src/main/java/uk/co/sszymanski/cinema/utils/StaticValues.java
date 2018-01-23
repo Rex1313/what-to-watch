@@ -13,4 +13,6 @@ public class StaticValues {
     public static final String POSTER_500_BASE_URL = "http://image.tmdb.org/t/p/w500/";
     public static final String POSTER_1000_BASE_URL = "http://image.tmdb.org/t/p/w1000/";
     public static final String OMDB_API_KEY = "998b4d6b";
+
+    public static final int DETAIL_ACTIVITY_REQUEST_CODE = 1;
 }

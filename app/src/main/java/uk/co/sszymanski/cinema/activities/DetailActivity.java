@@ -1,5 +1,6 @@
 package uk.co.sszymanski.cinema.activities;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TabLayout;
@@ -111,10 +112,16 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         CheckBox watchedCheckbox = findViewById(R.id.watched_checkbox);
         watchedCheckbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             Watched watched = new Watched(movieItem.getId());
+            Intent intent = new Intent();
+            intent.putExtra("movieId", movieItem.getId());
             if(isChecked) {
                 dbHelper.addWatchedMovie(watched);
+                intent.putExtra("watched", true);
+                setResult(RESULT_OK, intent);
             }else {
                 dbHelper.removeWatchedMovie(watched);
+                intent.putExtra("watched", false);
+                setResult(RESULT_OK, intent);
             }
 
         });
