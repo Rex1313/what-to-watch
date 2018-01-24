@@ -10,16 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.R;
 
 
 public class StoryFragment extends Fragment {
 
-
+    @BindView(R.id.story_text)
+    TextView story;
     private View rootView;
-
     private StoryFragmentInteractions mListener;
-
     public StoryFragment() {
     }
 
@@ -32,6 +33,7 @@ public class StoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_story, container, false);
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -55,8 +57,7 @@ public class StoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView infoText = view.findViewById(R.id.story_text);
-        infoText.setText(mListener.getStory());
+        story.setText(mListener.getStory());
     }
 
     public interface StoryFragmentInteractions {

@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.data.ApiService;
 import uk.co.sszymanski.cinema.interfaces.ApiCallbacks;
@@ -28,16 +30,17 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import static uk.co.sszymanski.cinema.utils.Utils.*;
 
 public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     private final String TAG = getClass().getSimpleName();
     private View rootView;
-
+    @BindView(R.id.screenshot_wrapper)
+    LinearLayout screenshotContainer;
     private MediaFragmentInteractions listener;
 
     public MediaFragment() {
     }
-
 
     public static MediaFragment newInstance() {
         return new MediaFragment();
@@ -74,24 +77,36 @@ public class MediaFragment extends Fragment implements YouTubePlayer.OnInitializ
     /**
      * This method creates a video thumbnail for youtube video and adds it to rootView
      *
-     * @param item Video item
+     * @param videoItem Video item
      */
-    private void createVideoThumb(final MovieVideoItem item) {
-        LinearLayout container = rootView.findViewById(R.id.screenshot_wrapper);
-        RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, container, false);
-        TextView title = wrapper.findViewById(R.id.title);
-        title.setText(item.getName());
-        ImageView screenshot = wrapper.findViewById(R.id.youtube_screenshot);
-        Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH + item.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
-        ImageButton button = wrapper.findViewById(R.id.play_button);
+    private void createVideoThumb(final MovieVideoItem videoItem) {
+        RelativeLayout wrapper = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.youtube_item, screenshotContainer, false);
+        // Butterknife findView is deprecated atm, can't see alternative so using custom utils method for now - see imports/ Utils.class
+        //TODO check if buttterknife lib updated to use its findView;
+        TextView title = findView(wrapper, R.id.title);
+        title.setText(videoItem.getName());
+        ImageView screenshot = findView(wrapper, R.id.youtube_screenshot);
+        // get screenshot of the video
+        Picasso.with(getActivity()).load(StaticValues.YOUTUBE_THUMB_PATH + videoItem.getKey() + "/0.jpg").fit().centerCrop().into(screenshot);
+        ImageButton button = findView(wrapper, R.id.play_button);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + item.getKey()));
-            intent.putExtra("VIDEO_ID", item.getKey());
-            intent.putExtra("force_fullscreen", true);
-            if (getActivity() != null) getActivity().startActivity(intent);
+           startYoutubeActivity(videoItem);
         });
-        container.addView(wrapper);
+        screenshotContainer.addView(wrapper);
     }
+
+
+    /**
+     * Starts Youtube activity through explict intent
+     * @param videoItem movie video item containing youtube video id
+     */
+    private void startYoutubeActivity(MovieVideoItem videoItem){
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoItem.getKey()));
+        intent.putExtra("VIDEO_ID", videoItem.getKey());
+        intent.putExtra("force_fullscreen", true);
+        if (getActivity() != null) getActivity().startActivity(intent);
+    }
+
 
     @Override
     public void onAttach(Context context) {

@@ -8,12 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.annotation.Nullable;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.pojo.OmdbMovieItem;
 
 
 public class InfoFragment extends Fragment {
     private View rootView;
+    @BindView(R.id.director_value)
+    TextView director;
+    @BindView(R.id.writer_value)
+    TextView writer;
+    @BindView(R.id.actors_value)
+    TextView actors;
+    @BindView(R.id.awards_value)
+    TextView awards;
 
     public InfoFragment() {
     }
@@ -26,16 +38,13 @@ public class InfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_info, container, false);
+        ButterKnife.bind(this, rootView);
         return rootView;
     }
 
 
     public void populateInfo(OmdbMovieItem item) {
         if (rootView != null) {
-            TextView director = rootView.findViewById(R.id.director_value);
-            TextView writer = rootView.findViewById(R.id.writer_value);
-            TextView actors = rootView.findViewById(R.id.actors_value);
-            TextView awards = rootView.findViewById(R.id.awards_value);
             director.setText(item.getDirector());
             writer.setText(item.getWriter());
             StringBuilder actorsString = new StringBuilder();
