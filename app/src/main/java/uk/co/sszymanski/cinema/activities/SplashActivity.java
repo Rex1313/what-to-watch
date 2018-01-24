@@ -4,12 +4,16 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import butterknife.BindInt;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.GlobalApplication;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.adapters.CategoryRecyclerAdapter;
@@ -29,24 +33,26 @@ import java.util.Map;
 public class SplashActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
     private GlobalApplication app;
-    private RecyclerView categoryRecyclerView;
-    private ProgressBar progressBar;
+    @BindView(R.id.recycler_view_category)
+    RecyclerView categoryRecyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
         init();
     }
 
     private void init() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
         String mainScreenTitle = this.getResources().getString(R.string.main_screen_title);
         toolbar.setTitle(mainScreenTitle);
         setSupportActionBar(toolbar);
         this.app = (GlobalApplication) this.getApplicationContext();
-        this.categoryRecyclerView = findViewById(R.id.recycler_view_category);
-        this.progressBar = findViewById(R.id.progress_bar);
         downloadGenres(app.getGenres());
     }
 

@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.adapters.MovieRecyclerAdapter;
 
@@ -37,10 +39,14 @@ import com.google.gson.Gson;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements MovieRecyclerInteractions, SearchView.OnQueryTextListener {
+    @BindView(R.id.movies_recycler_view)
+    RecyclerView movieRecyclerView;
+    MovieRecyclerAdapter movieRecyclerAdapter;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private final String TAG = getClass().getSimpleName();
-    private RecyclerView movieRecyclerView;
-    private MovieRecyclerAdapter movieRecyclerAdapter;
-    private ProgressBar progressBar;
     private DatabaseHelper dbHelper;
     private List<Watched> watched;
     private int categoryId;
@@ -50,7 +56,7 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         categoryId = getIntent().getIntExtra("categoryId", 0);
         String categoryString = getIntent().getStringExtra("categoryName");
@@ -86,15 +92,12 @@ public class MainActivity extends BaseActivity implements MovieRecyclerInteracti
     }
 
     private void init() {
-        movieRecyclerView = findViewById(R.id.movies_recycler_view);
         RecyclerView.LayoutManager recyclerViewLayoutManager;
         int orientation = getResources().getConfiguration().orientation;
         recyclerViewLayoutManager = orientation == Configuration.ORIENTATION_PORTRAIT
                 ? new LinearLayoutManager(this)
                 : new GridLayoutManager(this, 2);
         movieRecyclerView.setLayoutManager(recyclerViewLayoutManager);
-
-        progressBar = findViewById(R.id.progress_bar);
         preferenceUtils = new PreferencesUtils(this);
         dbHelper = new DatabaseHelper(this);
         watched = dbHelper.getWatchedMovies();

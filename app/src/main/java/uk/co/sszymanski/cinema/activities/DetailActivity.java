@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.co.sszymanski.cinema.GlobalApplication;
 import uk.co.sszymanski.cinema.R;
 import uk.co.sszymanski.cinema.adapters.ViewPagerAdapter;
@@ -34,20 +37,42 @@ import com.squareup.picasso.Picasso;
 public class DetailActivity extends BaseActivity implements StoryFragment.StoryFragmentInteractions, MediaFragment.MediaFragmentInteractions {
     private final int INFO_FRAGMENT_POSITION = 1;
 
-    private ImageView backdrop, cover;
-    private TextView title, genre, duration, tomatoesRating, imdbRating, mainRating;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.backdrop)
+    private ImageView backdrop;
+    @BindView(R.id.movie_cover)
+    ImageView cover;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.genre)
+    TextView genre;
+    @BindView(R.id.duration)
+    TextView duration;
+    @BindView(R.id.tomatoes_rating)
+    TextView tomatoesRating;
+    @BindView(R.id.imdb_rating)
+    TextView imdbRating;
+    @BindView(R.id.main_rating)
+    TextView mainRating;
+    @BindView(R.id.watched_checkbox)
+    CheckBox watchedCheckbox;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.pager_header)
+    TabLayout tabLayout;
     private MovieItem movieItem;
     private GlobalApplication app;
     private ViewPagerAdapter pagerAdapter;
-    private ProgressBar progressBar;
-    private Toolbar toolbar;
     private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        toolbar = findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -55,7 +80,6 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
-
         app = (GlobalApplication) getApplicationContext();
         movieItem = (MovieItem) getIntent().getSerializableExtra("movieItem");
         dbHelper = new DatabaseHelper(this);
@@ -99,17 +123,7 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
     }
 
     private void init() {
-        progressBar =  findViewById(R.id.progress_bar);
-        backdrop = findViewById(R.id.backdrop);
-        title =  findViewById(R.id.title);
-        genre =  findViewById(R.id.genre);
-        cover = findViewById(R.id.movie_cover);
         Picasso.with(this).load(StaticValues.POSTER_500_BASE_URL + movieItem.getPosterPath()).fit().centerCrop().into(cover);
-        duration = findViewById(R.id.duration);
-        tomatoesRating =  findViewById(R.id.tomatoes_rating);
-        mainRating =  findViewById(R.id.main_rating);
-        imdbRating = findViewById(R.id.imdb_rating);
-        CheckBox watchedCheckbox = findViewById(R.id.watched_checkbox);
         watchedCheckbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             Watched watched = new Watched(movieItem.getId());
             Intent intent = new Intent();
@@ -127,10 +141,8 @@ public class DetailActivity extends BaseActivity implements StoryFragment.StoryF
         });
         watchedCheckbox.setChecked(movieItem.isWatched);
         toolbar.setTitle(movieItem.getTitle());
-        ViewPager pager =  findViewById(R.id.view_pager);
-        initializeViewPager(pager);
-        TabLayout tabLayout =  findViewById(R.id.pager_header);
-        setTablayoutToViewpager(tabLayout, pager);
+        initializeViewPager(viewPager);
+        setTablayoutToViewpager(tabLayout, viewPager);
     }
 
     private void initializeViewPager(ViewPager viewPager){
